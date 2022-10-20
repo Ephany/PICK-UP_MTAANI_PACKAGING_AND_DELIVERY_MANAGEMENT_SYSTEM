@@ -19,7 +19,7 @@ Package delivery service simulator. Something like [GrabFood](https://www.grab.c
   
 - Java console application that shows the delivery process.
 - Logging system that shows the entire process when CrabFood is up.
-- Reporting system that displays daily order information for every restaurant. This is explicitly mentioned by the restaurants that partner with CrabFood for them to improve their services.
+- Reporting system that displays daily order information for every packeges. 
 
 </details>
 
@@ -28,7 +28,7 @@ Package delivery service simulator. Something like [GrabFood](https://www.grab.c
 <summary>Details</summary>
  
 - Simple.
-- Vanilla [JavaFX](https://openjfx.io/).
+- Java [JavaFX](https://openjfx.io/).
 
 </details>
 

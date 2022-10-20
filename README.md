@@ -36,7 +36,7 @@ Package delivery service simulator. Something like [GrabFood](https://www.grab.c
 <details>
 <summary>Details</summary>
 
-![CrabFood Flow Chart](.readme/flowchart.jpg)
+![PickUp Flow Chart](.readme/flowchart.jpg)
 
 </details>
 

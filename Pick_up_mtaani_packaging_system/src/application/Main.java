@@ -1,12 +1,12 @@
 package application;
-	
+
 //Describes the imports below
 /*
- *The first three lines of code import various classes that are needed for the program to run. The CrabFoodOrder class is used to represent an order from a crab food restaurant. The DeliverySession class is used to manage the delivery of orders. The Position class is used to represent a position on a map.
- *The next three lines of code define some variables that will be used throughout the program. The first variable, order, is an instance of the CrabFoodOrder class. The second variable, deliverySession, is an instance of the DeliverySession class. The third variable, position, is an instance of the Position class.
- *The next four lines of code define a list of dishes that can be ordered from the crab food restaurant. The list is represented by an instance of the ArrayList class. The list is populated with instances of the Dish class.
+ *The first three lines of code import various classes that are needed for the program to run. The PickUpOrder class is used to represent an order from a crab food packages. The DeliverySession class is used to manage the delivery of orders. The Position class is used to represent a position on a map.
+ *The next three lines of code define some variables that will be used throughout the program. The first variable, order, is an instance of the PickUpOrder class. The second variable, deliverySession, is an instance of the DeliverySession class. The third variable, position, is an instance of the Position class.
+ *The next four lines of code define a list of dishes that can be ordered from the crab food packages. The list is represented by an instance of the ArrayList class. The list is populated with instances of the Dish class.
  *The next line of code defines a map of delivery times for each dish. The map is represented by an instance of the HashMap class. The map is populated with key-value pairs, where the key is a dish and the value is the delivery time for that dish.
- *The next line of code defines an observable list of orders. The list is represented by an instance of the ObservableList class. The list is populated with instances of the CrabFoodOrder class.
+ *The next line of code defines an observable list of orders. The list is represented by an instance of the ObservableList class. The list is populated with instances of the PickUpOrder class.
  *The next line of code defines an observable map of delivery times. The map is represented by an instance of the ObservableMap class. The map is populated with key-value pairs, where the key is a dish and the value is the delivery time for that dish.
  *The next line of code defines an integer property that represents the number of orders in the list. The property is represented by an instance of the IntegerProperty class.
  *The next line of code defines a string property that represents the list of orders as a string. The property is represented by an instance of the StringProperty class.
@@ -29,17 +29,11 @@ package application;
  *The next line of code shows the stage.
  *The next line of code waits for the stage to be closed before exiting the program. 
  */
-import application.PackageOperator.PackageOrder;
+import application.PickUpOperator.PickUpOrder;
 import application.DeliveryGuy.DeliverySession;
 import application.MyGoogleMap.Position;
 import application.Package.Dish;
 import application.Package.PackageOrder;
-import application.PackageOperator;
-import application.DeliveryGuy;
-import application.Package;
-import application.SimulatedTime;
-import application.Main.Tile;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -86,10 +80,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-
-import javafx.scene.layout.BorderPane;
-
-
 /* Describes the function and code below.
  * The first line of code creates a public class called Main that extends the Application class. 
  * This means that the Main class inherits all the functionality of the Application class.
@@ -120,32 +110,32 @@ public class Main extends Application {
     
     /*Describes the codes below.
      *This code creates a new SimulatedTime object and assigns it to the clock variable. This SimulatedTime object will be used to track the current time in the simulation.
-     *Next, a new CrabFoodOperator object is created and assigned to the operator variable. This CrabFoodOperator object will be used to manage the crab food orders in the simulation.
-     *The closeTime variable is initialized to "21:20", which represents the closing time for the crab food restaurant.
+     *Next, a new PickUpOperator object is created and assigned to the operator variable. This PickUpOperator object will be used to manage the crab food orders in the simulation.
+     *The closeTime variable is initialized to "21:20", which represents the closing time for the crab food packages.
      *Finally, the code creates several Scene objects. These Scene objects will be used to represent the different screens (or "scenes") in the simulation.
      *The txtTimeStamp Text object is used to display the current time on the menu scene.
      *The tableOS TableView object is used to display the status of all outstanding orders on the menu scene.
-     *The cfOrderList ObservableList is used to store the data that is displayed in the tableOS TableView.
-     *The txtareaRestaurantName TextArea object is used to display the name of the restaurant that is being edited on the edit restaurant scene.
-     *The obsListRestaurant ObservableList is used to store the names of all the restaurants in the simulation. This list is displayed on the edit restaurant scene.
-     *The resToEdit StringProperty is used to store the name of the restaurant that is currently being edited. This property is bound to the txtareaRestaurantName TextArea object.
-     *The gridRestaurantLoc GridPane object is used to display the locations of the restaurants on the edit restaurant scene.
+     *The pOrderList ObservableList is used to store the data that is displayed in the tableOS TableView.
+     *The txtareaPackageName TextArea object is used to display the name of the packages that is being edited on the edit packages scene.
+     *The obsListPackage ObservableList is used to store the names of all the packages in the simulation. This list is displayed on the edit packages scene.
+     *The resToEdit StringProperty is used to store the name of the packages that is currently being edited. This property is bound to the txtareaPackageName TextArea object.
+     *The gridPackageLoc GridPane object is used to display the locations of the packages on the edit packages scene.
      *The obsListDishes ObservableList is used to store the names of all the dishes in the simulation. This list is displayed on the edit dish scene.
      *The dishToEdit StringProperty is used to store the name of the dish that is currently being edited. This property is bound to the txtareaDishName TextArea object.
      *The listDishes ListView object is used to display the list of dishes on the edit dish scene.
      *The txtareaDishName TextArea object is used to display the name of the dish that is being edited on the edit dish scene.
      *The spinnerDishPrepTime Spinner object is used to display and edit the prep time of the dish that is being edited on the edit dish scene.
-     *The flagAddRes boolean variable is used to track whether a new restaurant is being added or an existing restaurant is being edited.
+     *The flagAddRes boolean variable is used to track whether a new packages is being added or an existing packages is being edited.
      *The flagAddDish boolean variable is used to track whether a new dish is being added or an existing dish is being edited.
      *The btnSC Button object is used to simulate the arrival of a customer on the simulate customer scene.
      *The txtOrderTime Text object is used to display the order time of the customer on the simulate customer scene.
-     *The gridMap GridPane object is used to display the map of the restaurant on the view map scene.
+     *The gridMap GridPane object is used to display the map of the packages on the view map scene.
      */
     // make clock
     public volatile static SimulatedTime clock = new SimulatedTime();
 
-    // make CrabFood operator
-    public static PackageOperator operator = new PackageOperator();
+    // make PickUp operator
+    public static PickUpOperator operator = new PickUpOperator();
 
     // closing time
     String closeTime = "21:20";
@@ -160,18 +150,18 @@ public class Main extends Application {
     TableView tableOS = new TableView();
 
     // list to update status table
-    private ObservableList<PackageOrder> pOrderList = FXCollections.observableArrayList();
+    private ObservableList<PickUpOrder> pOrderList = FXCollections.observableArrayList();
 
-    // Text area to put name of selected restaurant to edit
+    // Text area to put name of selected packages to edit
     TextArea txtareaPackageName = new TextArea();
 
-    // Restaurant list in sceneMR
+    // Package list in sceneMR
     ObservableList<String> obsListPackage = FXCollections.observableArrayList();
 
-    // Restaurant chosen to edit in sceneER
+    // Package chosen to edit in sceneER
     StringProperty resToEdit = new SimpleStringProperty("");
 
-    // Locations of restaurant chosen to edit in sceneER
+    // Locations of packages chosen to edit in sceneER
     GridPane gridPackageLoc = new GridPane();
 
     // Observable dish list in sceneEDs
@@ -186,13 +176,13 @@ public class Main extends Application {
     // Text area to put name of selected dish to edit
     TextArea txtareaDishName = new TextArea();
 
-    // Temporary list of dishes to be added into new restaurant
+    // Temporary list of dishes to be added into new packages
     ArrayList<Dish> dishesToAddTemp = new ArrayList<>();
 
     // Spinner to put dish prep time of dish to edit
     Spinner spinnerDishPrepTime = new Spinner(1, 60, 5);
 
-    // Flag to indicate add operation on restaurant
+    // Flag to indicate add operation on packages
     boolean flagAddRes = false;
 
     // Flag to indicate add operation on dish
@@ -212,11 +202,11 @@ public class Main extends Application {
  *The thread timeThread is used to create a new thread. 
  *The updater is used to update the stage. 
  *The if statement is used to check if the clock is equal to 00:00. 
- *The CrabFoodOperator is used to get the process and set it to an empty string. 
- *The CrabFoodOperator is used to append the string "A new day has started!" to the process. 
- *The cfOrderList is used to clear the status table. The logHeader is used to create a new log section. 
- *The btnSC is used to enable the simulate customer button. The CrabFoodOperator is used to get the totalCrabFoodOrder and set it to 0. 
- *The CrabFoodOperator is used to clear the allPresetCrabFoodOrders. The CrabFoodOperator is used to read the allPresetCrabFoodOrders.
+ *The PickUpOperator is used to get the process and set it to an empty string. 
+ *The PickUpOperator is used to append the string "A new day has started!" to the process. 
+ *The pOrderList is used to clear the status table. The logHeader is used to create a new log section. 
+ *The btnSC is used to enable the simulate customer button. The PickUpOperator is used to get the totalPickUpOrder and set it to 0. 
+ *The PickUpOperator is used to clear the allPresetPickUpOrders. The PickUpOperator is used to read the allPresetPickUpOrders.
  */
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -231,8 +221,8 @@ public class Main extends Application {
                         // things to do when new day comes
                         if (clock.getTime().equals("00:00")) {
                             // new day
-                        	PackageOperator.getProcess().set("");
-                        	PackageOperator.appendToProcess("A new day has started!");
+                            PickUpOperator.getProcess().set("");
+                            PickUpOperator.appendToProcess("A new day has started!");
 
                             // reset status table
                             pOrderList.clear();
@@ -242,42 +232,42 @@ public class Main extends Application {
                                     "Customer ID", "Order Time", "Finished Cooking Time",
                                     "Delivered Time", "Cooking Duration", "Deliver Duration",
                                     "Total Duration", "Package", "Branch");
-                            PackageOperator.appendToLog(logHeader);
+                            PickUpOperator.appendToLog(logHeader);
 
                             // enable simulate customer button
                             btnSC.setDisable(false);
 
                             // partially reset program
-                            PackageOperator.getTotalPackageOrder().setValue(0);
+                            PickUpOperator.getTotalPickUpOrder().setValue(0);
 
-                            PackageOperator.getAllPresetPackageOrders().clear();
-                            PackageOperator.readAllPresetPackageOrders();
+                            PickUpOperator.getAllPresetPickUpOrders().clear();
+                            PickUpOperator.readAllPresetPickUpOrders();
 
-                            PackageOperator.getAllPackageOrders().clear();
+                            PickUpOperator.getAllPickUpOrders().clear();
                         }
 
                         if (clock.getTime().equals(closeTime)) {
                             btnSC.setDisable(true);
-                            PackageOperator.appendToProcess("CrabFood is done for the day. Stopped accepting new orders.");
+                            PickUpOperator.appendToProcess("PickUp is done for the day. Stopped accepting new orders.");
                         }
 
                         if (SimulatedTime.compareStringTime(clock.getTime(), closeTime) < 0) {
-                            // check for start of preset CrabFoodOrders to add into main list when time comes
-                            if (!PackageOperator.getAllPresetPackageOrders().isEmpty()) {
-                                Iterator itrpOrder = PackageOperator.getAllPresetPackageOrders().iterator();
-                                while (itrpOrder.hasNext()) {
-                                	PackageOrder pOrder = (PackageOrder) itrpOrder.next();
+                            // check for start of preset PickUpOrders to add into main list when time comes
+                            if (!PickUpOperator.getAllPresetPickUpOrders().isEmpty()) {
+                                Iterator itrCfOrder = PickUpOperator.getAllPresetPickUpOrders().iterator();
+                                while (itrCfOrder.hasNext()) {
+                                    PickUpOrder pOrder = (PickUpOrder) itrCfOrder.next();
                                     if (pOrder.getOrderTime().equals(clock.getTime())) {
-                                        // update variables in preset CrabFood order
+                                        // update variables in preset PickUp order
                                         pOrder.getStatus().setValue("New order");
-                                        pOrder.setCustomerId(PackageOperator.getTotalPackageOrder().get() + 1);
+                                        pOrder.setCustomerId(PickUpOperator.getTotalPickUpOrder().get() + 1);
 
-                                        // update total number of CrabFood orders
-                                        PackageOperator.getTotalPackageOrder().set(PackageOperator.getTotalPackageOrder().get() + 1);
+                                        // update total number of PickUp orders
+                                        PickUpOperator.getTotalPickUpOrder().set(PickUpOperator.getTotalPickUpOrder().get() + 1);
 
-                                        // add it to main list of CrabFood orders
-                                        PackageOperator.getAllPackageOrders().add(pOrder);
-                                        PackageOperator.sortpOrders();
+                                        // add it to main list of PickUp orders
+                                        PickUpOperator.getAllPickUpOrders().add(pOrder);
+                                        PickUpOperator.sortCfOrders();
 
                                         // drop it from the preset list
                                         itrCfOrder.remove();
@@ -285,10 +275,10 @@ public class Main extends Application {
                                 }
                             }
 
-                            // check for start of CrabFoodOrders (this is the main list)
-                            if (!PackageOperator.getAllPackageOrders().isEmpty()) {
-                                for (PackageOrder pOrder : PackageOperator.getAllPackageOrders()) {
-                                    if (cfOrder.getOrderTime().equals(clock.getTime())) {
+                            // check for start of PickUpOrders (this is the main list)
+                            if (!PickUpOperator.getAllPickUpOrders().isEmpty()) {
+                                for (PickUpOrder pOrder : PickUpOperator.getAllPickUpOrders()) {
+                                    if (pOrder.getOrderTime().equals(clock.getTime())) {
                                         // update process
                                         String processOrder = String.format("Customer %d at %s wants to order ",
                                                 pOrder.getCustomerId(), pOrder.getDeliveryLocation().toString());
@@ -304,11 +294,11 @@ public class Main extends Application {
                                             count++;
                                         }
                                         processOrder += "from " + pOrder.getPackageName() + ".";
-                                        PackageOperator.appendToProcess(processOrder);
+                                        PickUpOperator.appendToProcess(processOrder);
 
                                         // allocate order
                                         pOrder.getStatus().setValue("New order");
-                                        PackageOperator.allocateOrderByDistance(pOrder);
+                                        PickUpOperator.allocateOrderByDistance(pOrder);
 
                                         // add to status table
                                         if (!pOrderList.contains(pOrder)) {
@@ -319,50 +309,50 @@ public class Main extends Application {
                             }
                         }
 
-                        // check for start & end of food preparation at all restaurant branches
-                        if (!PackageOperator.getPartnerPackage().isEmpty()) {
-                            for (Package packages : PackageOperator.getPartnerPackage()) {
+                        // check for start & end of food preparation at all packages branches
+                        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                            for (Package packages : PickUpOperator.getPartnerPackages()) {
                                 if (!packages.getAllPackageOrders().isEmpty()) {
                                     Iterator itrROrder = packages.getAllPackageOrders().iterator();
                                     while (itrROrder.hasNext()) {
-                                    	PackageOrder rOrder = (PackageOrder) itrROrder.next();
+                                        PackageOrder rOrder = (PackageOrder) itrROrder.next();
                                         if (rOrder.getStartTime().equals(clock.getTime())) {
                                             // update process
-                                        	PackageOperator.appendToProcess(
+                                            PickUpOperator.appendToProcess(
                                                     String.format("Branch of %s at %s starts preparing order of customer %d.",
-                                                    		packages.getName(),
-                                                    		packages.getPosition(),
+                                                            packages.getName(),
+                                                            packages.getPosition(),
                                                             rOrder.getCustomerId()));
 
                                             // update status table
-                                            if (!PackageOperator.getAllPackageOrders().isEmpty()) {
-                                                for (PackageOrder pOrder : PackageOperator.getAllPackageOrders()) {
+                                            if (!PickUpOperator.getAllPickUpOrders().isEmpty()) {
+                                                for (PickUpOrder pOrder : PickUpOperator.getAllPickUpOrders()) {
                                                     if (pOrder.getCustomerId() == rOrder.getCustomerId()) {
                                                         pOrder.getStatus().setValue("Preparing...");
                                                     }
                                                 }
                                             }
                                         } else if (rOrder.getEndTime().equals(clock.getTime())) {
-                                            // remove restaurant order
+                                            // remove packages order
                                             itrROrder.remove();
 
                                             // update process
-                                            PackageOperator.appendToProcess(
+                                            PickUpOperator.appendToProcess(
                                                     String.format("Branch of %s at %s finishes preparing order of customer %d.",
-                                                    		packages.getName(),
-                                                    		packages.getPosition(),
+                                                            packages.getName(),
+                                                            packages.getPosition(),
                                                             rOrder.getCustomerId()));
 
                                             // pass to delivery man (via delivery man allocating algo)
-                                            for (PackageOrder pOrder : PackageOperator.getAllPackageOrders()) {
+                                            for (PickUpOrder pOrder : PickUpOperator.getAllPickUpOrders()) {
                                                 if (pOrder.getCustomerId() == rOrder.getCustomerId()) {
-                                                	PackageOperator.allocateDeliveryByFinishTime(pOrder);
+                                                    PickUpOperator.allocateDeliveryByFinishTime(pOrder);
                                                 }
                                             }
 
                                             // update status table
-                                            if (!PackageOperator.getAllPackageOrders().isEmpty()) {
-                                                for (PackageOrder pOrder : PackageOperator.getAllPackageOrders()) {
+                                            if (!PickUpOperator.getAllPickUpOrders().isEmpty()) {
+                                                for (PickUpOrder pOrder : PickUpOperator.getAllPickUpOrders()) {
                                                     if (pOrder.getCustomerId() == rOrder.getCustomerId()) {
                                                         pOrder.getStatus().setValue("Prepared");
                                                     }
@@ -375,70 +365,70 @@ public class Main extends Application {
                         }
 
                         // check for start & end of delivery at all delivery guys
-                        if (!PackageOperator.getAllDeliveryGuys().isEmpty()) {
-                            for (DeliveryGuy deliveryGuy : PackageOperator.getAllDeliveryGuys()) {
+                        if (!PickUpOperator.getAllDeliveryGuys().isEmpty()) {
+                            for (DeliveryGuy deliveryGuy : PickUpOperator.getAllDeliveryGuys()) {
                                 if (!deliveryGuy.getAllDeliverySession().isEmpty()) {
                                     Iterator itrSession = deliveryGuy.getAllDeliverySession().iterator();
                                     while (itrSession.hasNext()) {
                                         DeliverySession session = (DeliverySession) itrSession.next();
                                         if (session.getDeliveryStartTime().equals(clock.getTime())) {
                                             // update process
-                                        	PackageOperator.appendToProcess(
+                                            PickUpOperator.appendToProcess(
                                                     String.format("Delivery man %d at %s starts delivering order to customer %d at %s.",
                                                             deliveryGuy.getDeliveryGuyId(),
                                                             deliveryGuy.getCurrentPosition().toString(),
-                                                            session.getPackageOrderTBD().getCustomerId(),
+                                                            session.getPickUpOrderTBD().getCustomerId(),
                                                             session.getDeliveryEndPosition()));
 
                                             // update status table
-                                            if (!PackageOperator.getAllPackageOrders().isEmpty()) {
-                                                for (PackageOrder pOrder : PackageOperator.getAllPackageOrders()) {
-                                                    if (pOrder.getCustomerId() == session.getPackageOrderTBD().getCustomerId()) {
+                                            if (!PickUpOperator.getAllPickUpOrders().isEmpty()) {
+                                                for (PickUpOrder pOrder : PickUpOperator.getAllPickUpOrders()) {
+                                                    if (pOrder.getCustomerId() == session.getPickUpOrderTBD().getCustomerId()) {
                                                         pOrder.getStatus().setValue("Delivering...");
                                                     }
                                                 }
                                             }
                                         } else if (session.getDeliveryEndTime().equals(clock.getTime())) {
-                                        	PackageOrder endpOrder = session.getPackageOrderTBD();
+                                            PickUpOrder endCfOrder = session.getPickUpOrderTBD();
 
                                             // update process
-                                        	PackageOperator.appendToProcess(
+                                            PickUpOperator.appendToProcess(
                                                     String.format("Delivery man %d at %s finishes delivering order to customer %d at %s.",
                                                             deliveryGuy.getDeliveryGuyId(),
                                                             deliveryGuy.getCurrentPosition().toString(),
-                                                            session.getPackageOrderTBD().getCustomerId(),
+                                                            session.getPickUpOrderTBD().getCustomerId(),
                                                             session.getDeliveryEndPosition()));
 
                                             // update status table
-                                            if (!PackageOperator.getAllPackageOrders().isEmpty()) {
-                                                for (PackageOrder pOrder : PackageOperator.getAllPackageOrders()) {
-                                                    if (pOrder.getCustomerId().equals(endpOrder.getCustomerId())) {
+                                            if (!PickUpOperator.getAllPickUpOrders().isEmpty()) {
+                                                for (PickUpOrder pOrder : PickUpOperator.getAllPickUpOrders()) {
+                                                    if (pOrder.getCustomerId().equals(endCfOrder.getCustomerId())) {
                                                         pOrder.getStatus().setValue("Delivered");
                                                     }
                                                 }
                                             }
 
                                             // key in to log 
-                                            PackageOperator.appendToLog(
+                                            PickUpOperator.appendToLog(
                                                     String.format("\n| %-11s | %-10s | %-21s | %-14s | %-16s | %-16s | %-14s | %-20s | %-6s ",
-                                                            endpOrder.getCustomerId(), endpOrder.getOrderTime(),
-                                                            SimulatedTime.getTimeAfter(endpOrder.getOrderTime(), endpOrder.getCookTime()),
-                                                            session.getDeliveryEndTime(), endpOrder.getCookTime(),
+                                                            endCfOrder.getCustomerId(), endCfOrder.getOrderTime(),
+                                                            SimulatedTime.getTimeAfter(endCfOrder.getOrderTime(), endCfOrder.getCookTime()),
+                                                            session.getDeliveryEndTime(), endCfOrder.getCookTime(),
                                                             session.getDeliveryDuration(),
-                                                            SimulatedTime.differenceTime(endpOrder.getOrderTime(), session.getDeliveryEndTime()),
-                                                            endpOrder.getPackageName(),
-                                                            endpOrder.getBranchLocation()));
+                                                            SimulatedTime.differenceTime(endCfOrder.getOrderTime(), session.getDeliveryEndTime()),
+                                                            endCfOrder.getPackageName(),
+                                                            endCfOrder.getBranchLocation()));
 
                                             // remove session
                                             itrSession.remove();
 
-                                            // remove from main CrabFood order list
-                                            if (!PackageOperator.getAllPackageOrders().isEmpty()) {
-                                                Iterator itrAllpOrders = PackageOperator.getAllPackageOrders().iterator();
-                                                while (itrAllpOrders.hasNext()) {
-                                                	PackageOrder pOrder = (PackageOrder) itrAllpOrders.next();
-                                                    if (pOrder.getCustomerId().equals(endpOrder.getCustomerId())) {
-                                                        itrAllpOrders.remove();
+                                            // remove from main PickUp order list
+                                            if (!PickUpOperator.getAllPickUpOrders().isEmpty()) {
+                                                Iterator itrAllCfOrders = PickUpOperator.getAllPickUpOrders().iterator();
+                                                while (itrAllCfOrders.hasNext()) {
+                                                    PickUpOrder pOrder = (PickUpOrder) itrAllCfOrders.next();
+                                                    if (pOrder.getCustomerId().equals(endCfOrder.getCustomerId())) {
+                                                        itrAllCfOrders.remove();
                                                         break;
                                                     }
                                                 }
@@ -508,23 +498,23 @@ public class Main extends Application {
         primaryStage.setMinHeight(876);
         primaryStage.setMinWidth(802);
         primaryStage.setScene(sceneMenu);
-        primaryStage.setTitle("CrabFood");
+        primaryStage.setTitle("PickUp");
 //        primaryStage.setOnCloseRequest(fn -> {});
         primaryStage.show();
     }
 
     /* Describe and explain the function below.
-     * This code creates a scene for the CrabFoodOperator to manage the restaurants, delivery, view order log, and view map. 
-     * The first four lines create buttons for the CrabFoodOperator to manage the restaurants, delivery, view order log, and view map. 
+     * This code creates a scene for the PickUpOperator to manage the packages, delivery, view order log, and view map. 
+     * The first four lines create buttons for the PickUpOperator to manage the packages, delivery, view order log, and view map. 
      * The next four lines set the maximum size for the buttons. 
-     * The next four lines set an action for each button. The first button sets the scene to the scene for managing restaurants. The second button sets the scene to the scene for managing delivery. The third button sets the scene to the scene for viewing the order log. The fourth button sets the scene to the scene for viewing the map. 
+     * The next four lines set an action for each button. The first button sets the scene to the scene for managing packages. The second button sets the scene to the scene for managing delivery. The third button sets the scene to the scene for viewing the order log. The fourth button sets the scene to the scene for viewing the map. 
      * The next four lines create a grid for the map. 
      * The next line adds the tiles to the map. 
      * The next line colors the tiles grey. 
      */
     private void makeSceneMenu(Stage primaryStage) {
-        // Manage Restaurants, Manage Delivery, View Order Log
-        Button btnMR = new Button("Manage Restaurants");
+        // Manage Packages, Manage Delivery, View Order Log
+        Button btnMR = new Button("Manage Packages");
         btnMR.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMR.setOnAction(fn -> primaryStage.setScene(sceneMR));
 
@@ -540,15 +530,15 @@ public class Main extends Application {
         btnVM.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnVM.setOnAction(fn -> {
             ArrayList<Position> branchLoc = new ArrayList<>();
-            if (!PackageOperator.getPartnerPackage().isEmpty()) {
-                for (Package packages : PackageOperator.getPartnerPackage()) {
+            if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                for (Package packages : PickUpOperator.getPartnerPackages()) {
                     branchLoc.add(packages.getPosition());
                 }
             }
 
-            for (int i = 0; i < PackageOperator.getMasterMap().getWidth(); i++) {
-                for (int j = 0; j < PackageOperator.getMasterMap().getHeight(); j++) {
-                    Tile tile = new Tile(String.valueOf(PackageOperator.getMasterMap().getSymbolAt(i, j)));
+            for (int i = 0; i < PickUpOperator.getMasterMap().getWidth(); i++) {
+                for (int j = 0; j < PickUpOperator.getMasterMap().getHeight(); j++) {
+                    Tile tile = new Tile(String.valueOf(PickUpOperator.getMasterMap().getSymbolAt(i, j)));
                     GridPane.setConstraints(tile, i, j);
                     tile.colorTileGrey();
                     gridMap.getChildren().addAll(tile);
@@ -578,8 +568,8 @@ public class Main extends Application {
         txtareaPL.setMinSize(500, 400);
         txtareaPL.setEditable(false);
         txtareaPL.setFont(Font.font("Monospace", 20));
-        txtareaPL.textProperty().bind(PackageOperator.getProcess());
-        PackageOperator.getProcess().addListener(new ChangeListener() {
+        txtareaPL.textProperty().bind(PickUpOperator.getProcess());
+        PickUpOperator.getProcess().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 txtareaPL.selectPositionCaret(txtareaPL.getLength());
@@ -588,28 +578,28 @@ public class Main extends Application {
         });
 
         // Order Status
-        TableColumn<CrabFoodOrder, Integer> colCustomerId = new TableColumn<>("Customer ID");
+        TableColumn<PickUpOrder, Integer> colCustomerId = new TableColumn<>("Customer ID");
         colCustomerId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
 
-        TableColumn<CrabFoodOrder, String> colOrderTime = new TableColumn<>("Order Time");
+        TableColumn<PickUpOrder, String> colOrderTime = new TableColumn<>("Order Time");
         colOrderTime.setCellValueFactory(new PropertyValueFactory<>("orderTime"));
 
-        TableColumn<CrabFoodOrder, String> colRestaurant = new TableColumn<>("Restaurant");
-        colRestaurant.setCellValueFactory(new PropertyValueFactory<>("restaurantName"));
+        TableColumn<PickUpOrder, String> colPackage = new TableColumn<>("Package");
+        colPackage.setCellValueFactory(new PropertyValueFactory<>("packageName"));
 
-        TableColumn<CrabFoodOrder, Position> colBranch = new TableColumn<>("Branch");
+        TableColumn<PickUpOrder, Position> colBranch = new TableColumn<>("Branch");
         colBranch.setCellValueFactory(new PropertyValueFactory<>("branchLocation"));
 
-        TableColumn<CrabFoodOrder, String> colStatus = new TableColumn<>("Status");
+        TableColumn<PickUpOrder, String> colStatus = new TableColumn<>("Status");
         colStatus.setCellValueFactory(cd -> cd.getValue().getStatus());
 
         tableOS.setMinSize(500, 400);
         tableOS.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tableOS.getColumns().addAll(colCustomerId, colOrderTime, colRestaurant, colBranch, colStatus);
-        tableOS.setItems(cfOrderList);
-        pOrderList.addListener(new ListChangeListener<PackageOrder>() {
+        tableOS.getColumns().addAll(colCustomerId, colOrderTime, colPackage, colBranch, colStatus);
+        tableOS.setItems(pOrderList);
+        pOrderList.addListener(new ListChangeListener<PickUpOrder>() {
             @Override
-            public void onChanged(ListChangeListener.Change<? extends PackageOrder> c) {
+            public void onChanged(ListChangeListener.Change<? extends PickUpOrder> c) {
                 tableOS.scrollTo(pOrderList.size() - 1);
             }
         });
@@ -633,18 +623,18 @@ public class Main extends Application {
     }
 
     /* Describes the function below.
-     * The code below creates a button that, when clicked, will allow the user to edit a selected restaurant. It also sets up the scene for the edit restaurant page, including the text field for the restaurant name and the position of the restaurant.
-     * The code first creates a list of all the restaurants that the user can choose from. It then checks if the list of restaurants is empty. If it is not, it adds all the restaurants to the list.
-     * Next, it creates a button labeled "Edit". When this button is clicked, it will take the user to the edit restaurant page.
-     * On the edit restaurant page, the text field for the restaurant name will be populated with the name of the restaurant that was selected. The position of the restaurant will also be displayed.
+     * The code below creates a button that, when clicked, will allow the user to edit a selected packages. It also sets up the scene for the edit packages page, including the text field for the packages name and the position of the packages.
+     * The code first creates a list of all the packages that the user can choose from. It then checks if the list of packages is empty. If it is not, it adds all the packages to the list.
+     * Next, it creates a button labeled "Edit". When this button is clicked, it will take the user to the edit packages page.
+     * On the edit packages page, the text field for the packages name will be populated with the name of the packages that was selected. The position of the packages will also be displayed.
      */
     private void makeSceneMR(Stage primaryStage) {
-        // Restaurant List
-        ListView listRestaurant = new ListView(obsListRestaurant);
-        if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-            for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                if (!obsListRestaurant.contains(restaurant.getName())) {
-                    obsListRestaurant.add(restaurant.getName());
+        // Package List
+        ListView listPackage = new ListView(obsListPackage);
+        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
+                if (!obsListPackage.contains(packages.getName())) {
+                    obsListPackage.add(packages.getName());
                 }
             }
         }
@@ -653,34 +643,34 @@ public class Main extends Application {
         Button btnMR_EDIT = new Button("Edit");
         btnMR_EDIT.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMR_EDIT.setOnAction(fn -> {
-            if (listRestaurant.getSelectionModel().getSelectedItem() != null) {
-                // record selected restaurant to edit to be passed to edit restaurant
-                resToEdit.setValue(listRestaurant.getSelectionModel().getSelectedItem().toString());
+            if (listPackage.getSelectionModel().getSelectedItem() != null) {
+                // record selected packages to edit to be passed to edit packages
+                resToEdit.setValue(listPackage.getSelectionModel().getSelectedItem().toString());
 
                 // get ready sceneER (edit name)
-                txtareaRestaurantName.setText(resToEdit.getValue());
+                txtareaPackageName.setText(resToEdit.getValue());
 
                 // get ready sceneER (edit branch locations)
-                ArrayList<Position> branchLoc = new ArrayList<>(); // branch of restaurant to edit
-                ArrayList<Position> otherBranchLoc = new ArrayList<>(); // branch of restaurant besides the one to edit
+                ArrayList<Position> branchLoc = new ArrayList<>(); // branch of packages to edit
+                ArrayList<Position> otherBranchLoc = new ArrayList<>(); // branch of packages besides the one to edit
                 if (!resToEdit.getValue().equals("") && resToEdit.getValue() != null) {
-                    if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                        for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                            if (restaurant.getName().equals(resToEdit.getValue())) {
-                                branchLoc.add(restaurant.getPosition());
-                            } else if (!restaurant.getName().equals(resToEdit.getValue())) {
-                                otherBranchLoc.add(restaurant.getPosition());
+                    if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                        for (Package packages : PickUpOperator.getPartnerPackages()) {
+                            if (packages.getName().equals(resToEdit.getValue())) {
+                                branchLoc.add(packages.getPosition());
+                            } else if (!packages.getName().equals(resToEdit.getValue())) {
+                                otherBranchLoc.add(packages.getPosition());
                             }
                         }
                     }
                 }
 
-                gridRestaurantLoc.getChildren().clear();
-                for (int i = 0; i < CrabFoodOperator.getMasterMap().getWidth(); i++) {
-                    for (int j = 0; j < CrabFoodOperator.getMasterMap().getHeight(); j++) {
-                        Tile tile = new Tile(String.valueOf(CrabFoodOperator.getMasterMap().getSymbolAt(i, j)));
+                gridPackageLoc.getChildren().clear();
+                for (int i = 0; i < PickUpOperator.getMasterMap().getWidth(); i++) {
+                    for (int j = 0; j < PickUpOperator.getMasterMap().getHeight(); j++) {
+                        Tile tile = new Tile(String.valueOf(PickUpOperator.getMasterMap().getSymbolAt(i, j)));
                         GridPane.setConstraints(tile, i, j);
-                        gridRestaurantLoc.getChildren().addAll(tile);
+                        gridPackageLoc.getChildren().addAll(tile);
 
                         for (Position pos : branchLoc) {
                             if (i == pos.getPosX() && j == pos.getPosY()) {
@@ -700,11 +690,11 @@ public class Main extends Application {
                 otherBranchLoc.clear();
 
                 // get ready sceneEDs
-                if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                    for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                        if (restaurant.getName().equals(resToEdit.getValue())) {
-                            if (!restaurant.getAllAvailableDishes().isEmpty()) {
-                                for (Dish dish : restaurant.getAllAvailableDishes()) {
+                if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                    for (Package packages : PickUpOperator.getPartnerPackages()) {
+                        if (packages.getName().equals(resToEdit.getValue())) {
+                            if (!packages.getAllAvailableDishes().isEmpty()) {
+                                for (Dish dish : packages.getAllAvailableDishes()) {
                                     obsListDishes.add(dish.getName());
                                 }
                             }
@@ -720,9 +710,9 @@ public class Main extends Application {
         Button btnMR_DELETE = new Button("Delete");
         btnMR_DELETE.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMR_DELETE.setOnAction(fn -> {
-            if (listRestaurant.getSelectionModel().getSelectedItem() != null) {
+            if (listPackage.getSelectionModel().getSelectedItem() != null) {
                 // for now, remove only from observable list
-                obsListRestaurant.remove(listRestaurant.getSelectionModel().getSelectedItem().toString());
+                obsListPackage.remove(listPackage.getSelectionModel().getSelectedItem().toString());
             }
         });
 
@@ -730,23 +720,23 @@ public class Main extends Application {
         btnMR_ADD.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMR_ADD.setOnAction(fn -> {
             // clear selected item 
-            if (listRestaurant.getSelectionModel().getSelectedItem() != null) {
-                listRestaurant.getSelectionModel().clearSelection();
+            if (listPackage.getSelectionModel().getSelectedItem() != null) {
+                listPackage.getSelectionModel().clearSelection();
             }
 
             // get ready sceneER (add branch locations)
-            ArrayList<Position> branchLoc = new ArrayList<>(); // branch of restaurant to add
-            if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                    branchLoc.add(restaurant.getPosition());
+            ArrayList<Position> branchLoc = new ArrayList<>(); // branch of packages to add
+            if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                for (Package packages : PickUpOperator.getPartnerPackages()) {
+                    branchLoc.add(packages.getPosition());
                 }
             }
-            gridRestaurantLoc.getChildren().clear();
-            for (int i = 0; i < CrabFoodOperator.getMasterMap().getWidth(); i++) {
-                for (int j = 0; j < CrabFoodOperator.getMasterMap().getHeight(); j++) {
-                    Tile tile = new Tile(String.valueOf(CrabFoodOperator.getMasterMap().getSymbolAt(i, j)));
+            gridPackageLoc.getChildren().clear();
+            for (int i = 0; i < PickUpOperator.getMasterMap().getWidth(); i++) {
+                for (int j = 0; j < PickUpOperator.getMasterMap().getHeight(); j++) {
+                    Tile tile = new Tile(String.valueOf(PickUpOperator.getMasterMap().getSymbolAt(i, j)));
                     GridPane.setConstraints(tile, i, j);
-                    gridRestaurantLoc.getChildren().addAll(tile);
+                    gridPackageLoc.getChildren().addAll(tile);
 
                     for (Position pos : branchLoc) {
                         if (i == pos.getPosX() && j == pos.getPosY()) {
@@ -765,38 +755,38 @@ public class Main extends Application {
         Button btnMR_DONE = new Button("Done");
         btnMR_DONE.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMR_DONE.setOnAction(fn -> {
-            if (!obsListRestaurant.isEmpty()) {
+            if (!obsListPackage.isEmpty()) {
                 // clear selected items
-                if (listRestaurant.getSelectionModel().getSelectedItem() != null) {
-                    listRestaurant.getSelectionModel().clearSelection();
+                if (listPackage.getSelectionModel().getSelectedItem() != null) {
+                    listPackage.getSelectionModel().clearSelection();
                 }
 
-                // if obsListRestaurant does not contain certain restaurants, delete them
-                if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                    Iterator itrAllPartnerRestaurant = CrabFoodOperator.getPartnerRestaurants().iterator();
-                    while (itrAllPartnerRestaurant.hasNext()) {
-                        Restaurant restaurant = (Restaurant) itrAllPartnerRestaurant.next();
-                        if (!obsListRestaurant.contains(restaurant.getName())) {
-                            itrAllPartnerRestaurant.remove();
+                // if obsListPackage does not contain certain packages, delete them
+                if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                    Iterator itrAllPartnerPackage = PickUpOperator.getPartnerPackages().iterator();
+                    while (itrAllPartnerPackage.hasNext()) {
+                        Package packages = (Package) itrAllPartnerPackage.next();
+                        if (!obsListPackage.contains(packages.getName())) {
+                            itrAllPartnerPackage.remove();
                         }
                     }
                 }
 
                 // update stuff to txt and read again to restart program
-                CrabFoodOperator.getTotalCrabFoodOrder().setValue(0);
+                PickUpOperator.getTotalPickUpOrder().setValue(0);
 
-                CrabFoodOperator.updatePartnerRestaurants();
-                CrabFoodOperator.readPartnerRestaurants();
+                PickUpOperator.updatePartnerPackages();
+                PickUpOperator.readPartnerPackages();
 
-                CrabFoodOperator.getMasterMap().updateMap();
+                PickUpOperator.getMasterMap().updateMap();
 
-                CrabFoodOperator.getAllDeliveryGuys().clear();
-                CrabFoodOperator.readAllDeliveryGuys();
+                PickUpOperator.getAllDeliveryGuys().clear();
+                PickUpOperator.readAllDeliveryGuys();
 
-                CrabFoodOperator.getAllPresetCrabFoodOrders().clear();
-                CrabFoodOperator.readAllPresetCrabFoodOrders();
+                PickUpOperator.getAllPresetPickUpOrders().clear();
+                PickUpOperator.readAllPresetPickUpOrders();
 
-                CrabFoodOperator.getAllCrabFoodOrders().clear();
+                PickUpOperator.getAllPickUpOrders().clear();
 
                 clock.resetTime();
 
@@ -808,36 +798,36 @@ public class Main extends Application {
         btnMR_CANCEL.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMR_CANCEL.setOnAction(fn -> {
             // clear selected items
-            if (listRestaurant.getSelectionModel().getSelectedItem() != null) {
-                listRestaurant.getSelectionModel().clearSelection();
+            if (listPackage.getSelectionModel().getSelectedItem() != null) {
+                listPackage.getSelectionModel().clearSelection();
             }
 
-            // reset the list of restaurants
-            obsListRestaurant.clear();
-            if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                    if (!obsListRestaurant.contains(restaurant.getName())) {
-                        obsListRestaurant.add(restaurant.getName());
+            // reset the list of packages
+            obsListPackage.clear();
+            if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                for (Package packages : PickUpOperator.getPartnerPackages()) {
+                    if (!obsListPackage.contains(packages.getName())) {
+                        obsListPackage.add(packages.getName());
                     }
                 }
             }
 
             // update stuff to txt and read again to restart program
             // SPECIAL CASE, since there might be edits in internal scenes
-            CrabFoodOperator.getTotalCrabFoodOrder().setValue(0);
+            PickUpOperator.getTotalPickUpOrder().setValue(0);
 
-            CrabFoodOperator.updatePartnerRestaurants();
-            CrabFoodOperator.readPartnerRestaurants();
+            PickUpOperator.updatePartnerPackages();
+            PickUpOperator.readPartnerPackages();
 
-            CrabFoodOperator.getMasterMap().updateMap();
+            PickUpOperator.getMasterMap().updateMap();
 
-            CrabFoodOperator.getAllDeliveryGuys().clear();
-            CrabFoodOperator.readAllDeliveryGuys();
+            PickUpOperator.getAllDeliveryGuys().clear();
+            PickUpOperator.readAllDeliveryGuys();
 
-            CrabFoodOperator.getAllPresetCrabFoodOrders().clear();
-            CrabFoodOperator.readAllPresetCrabFoodOrders();
+            PickUpOperator.getAllPresetPickUpOrders().clear();
+            PickUpOperator.readAllPresetPickUpOrders();
 
-            CrabFoodOperator.getAllCrabFoodOrders().clear();
+            PickUpOperator.getAllPickUpOrders().clear();
 
             clock.resetTime();
 
@@ -850,25 +840,25 @@ public class Main extends Application {
 
         // ##
         GridPane layoutMR = new GridPane();
-        GridPane.setVgrow(listRestaurant, Priority.ALWAYS);
-        GridPane.setHgrow(listRestaurant, Priority.ALWAYS);
-        GridPane.setConstraints(listRestaurant, 0, 0);
+        GridPane.setVgrow(listPackage, Priority.ALWAYS);
+        GridPane.setHgrow(listPackage, Priority.ALWAYS);
+        GridPane.setConstraints(listPackage, 0, 0);
         GridPane.setConstraints(layoutMRBottom, 0, 1);
         layoutMR.setPadding(new Insets(10, 10, 10, 10));
         layoutMR.setVgap(10);
-        layoutMR.getChildren().addAll(listRestaurant, layoutMRBottom);
+        layoutMR.getChildren().addAll(listPackage, layoutMRBottom);
 
         sceneMR = new Scene(layoutMR, stageWidth.getValue(), stageHeight.getValue());
     }
 
     /* Describes the functions below.
-     * The code above creates a scene for the "Make Delivery" menu. This scene allows the user to specify the number of delivery men for the restaurant. 
+     * The code above creates a scene for the "Make Delivery" menu. This scene allows the user to specify the number of delivery men for the packages. 
      * The first line creates a label for the number of delivery men. 
      * The second line creates a spinner for the number of delivery men. The spinner has a range of 1 to 100, and the default value is 1. 
      * The third line adds the spinner to a horizontal box layout. 
      * The fourth line creates a button labeled "Done". 
      * The fifth line sets the maximum size for the button. 
-     * The sixth line adds an event handler to the button. When the button is clicked, the event handler clears the list of all delivery guys, then loops through the specified number of delivery men and adds them to the list. Finally, it updates the partner restaurants, the master map, and the list of all delivery guys.
+     * The sixth line adds an event handler to the button. When the button is clicked, the event handler clears the list of all delivery guys, then loops through the specified number of delivery men and adds them to the list. Finally, it updates the partner packages, the master map, and the list of all delivery guys.
      */
     private void makeSceneMD(Stage primaryStage) {
         // Number of Delivery Man
@@ -877,7 +867,7 @@ public class Main extends Application {
         Spinner spinnerNumDeliveryMan = new Spinner(1, 100, 1);
         spinnerNumDeliveryMan.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_HORIZONTAL);
         spinnerNumDeliveryMan.setEditable(true);
-        spinnerNumDeliveryMan.getValueFactory().setValue(CrabFoodOperator.getAllDeliveryGuys().size());
+        spinnerNumDeliveryMan.getValueFactory().setValue(PickUpOperator.getAllDeliveryGuys().size());
 
         // #
         HBox layoutMDTop = new HBox(10, labelNumDeliveryMan, spinnerNumDeliveryMan);
@@ -888,26 +878,26 @@ public class Main extends Application {
         btnMD_DONE.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMD_DONE.setOnAction(fn -> {
 
-            CrabFoodOperator.getAllDeliveryGuys().clear();
+            PickUpOperator.getAllDeliveryGuys().clear();
             for (int i = 1; i <= Integer.parseInt(spinnerNumDeliveryMan.getValue().toString()); i++) {
-                CrabFoodOperator.getAllDeliveryGuys().add(new DeliveryGuy(i));
+                PickUpOperator.getAllDeliveryGuys().add(new DeliveryGuy(i));
             }
 
             // update stuff to txt and read again to restart program
-            CrabFoodOperator.getTotalCrabFoodOrder().setValue(0);
+            PickUpOperator.getTotalPickUpOrder().setValue(0);
 
-            CrabFoodOperator.updatePartnerRestaurants();
-            CrabFoodOperator.readPartnerRestaurants();
+            PickUpOperator.updatePartnerPackages();
+            PickUpOperator.readPartnerPackages();
 
-            CrabFoodOperator.getMasterMap().updateMap();
+            PickUpOperator.getMasterMap().updateMap();
 
-            CrabFoodOperator.updateAllDeliveryGuys();
-            CrabFoodOperator.readAllDeliveryGuys();
+            PickUpOperator.updateAllDeliveryGuys();
+            PickUpOperator.readAllDeliveryGuys();
 
-            CrabFoodOperator.getAllPresetCrabFoodOrders().clear();
-            CrabFoodOperator.readAllPresetCrabFoodOrders();
+            PickUpOperator.getAllPresetPickUpOrders().clear();
+            PickUpOperator.readAllPresetPickUpOrders();
 
-            CrabFoodOperator.getAllCrabFoodOrders().clear();
+            PickUpOperator.getAllPickUpOrders().clear();
 
             clock.resetTime();
 
@@ -917,7 +907,7 @@ public class Main extends Application {
         Button btnMD_CANCEL = new Button("Cancel");
         btnMD_CANCEL.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnMD_CANCEL.setOnAction(fn -> {
-            spinnerNumDeliveryMan.getValueFactory().setValue(CrabFoodOperator.getAllDeliveryGuys().size());
+            spinnerNumDeliveryMan.getValueFactory().setValue(PickUpOperator.getAllDeliveryGuys().size());
             primaryStage.setScene(sceneMenu);
         });
 
@@ -951,8 +941,8 @@ public class Main extends Application {
         TextArea txtareaOrderLog = new TextArea();
         txtareaOrderLog.setEditable(false);
         txtareaOrderLog.setFont(Font.font("Monospace", 15));
-        txtareaOrderLog.textProperty().bind(CrabFoodOperator.getLog());
-        CrabFoodOperator.getLog().addListener(new ChangeListener() {
+        txtareaOrderLog.textProperty().bind(PickUpOperator.getLog());
+        PickUpOperator.getLog().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 txtareaOrderLog.selectPositionCaret(txtareaOrderLog.getLength());
@@ -1071,20 +1061,20 @@ public class Main extends Application {
         Label labelCustomerID = new Label("Customer ID : ");
 
         Text txtCustomerID = new Text();
-        txtCustomerID.textProperty().bind(CrabFoodOperator.getTotalCrabFoodOrder().add(1).asString());
+        txtCustomerID.textProperty().bind(PickUpOperator.getTotalPickUpOrder().add(1).asString());
 
         // Order Time
         Label labelOrderTime = new Label("Order Time : ");
 
-        // Restaurant
-        Label labelRestaurant = new Label("Restaurant : ");
+        // Package
+        Label labelPackage = new Label("Package : ");
 
-        ComboBox comboRestaurant = new ComboBox();
-        comboRestaurant.setPromptText("Pick a restaurant");
-        comboRestaurant.setPrefSize(450, 10);
-        for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-            if (!comboRestaurant.getItems().contains(restaurant.getName())) {
-                comboRestaurant.getItems().add(restaurant.getName());
+        ComboBox comboPackage = new ComboBox();
+        comboPackage.setPromptText("Pick a packages");
+        comboPackage.setPrefSize(450, 10);
+        for (Package packages : PickUpOperator.getPartnerPackages()) {
+            if (!comboPackage.getItems().contains(packages.getName())) {
+                comboPackage.getItems().add(packages.getName());
             }
         }
 
@@ -1111,15 +1101,15 @@ public class Main extends Application {
         });
 
         // listeners
-        comboRestaurant.valueProperty().addListener(new ChangeListener<String>() {
+        comboPackage.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 // reset dish
-                if (comboRestaurant.getSelectionModel().getSelectedItem() != null) {
-                    for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                        if (comboRestaurant.getSelectionModel().getSelectedItem().toString().equals(restaurant.getName())) {
+                if (comboPackage.getSelectionModel().getSelectedItem() != null) {
+                    for (Package packages : PickUpOperator.getPartnerPackages()) {
+                        if (comboPackage.getSelectionModel().getSelectedItem().toString().equals(packages.getName())) {
                             comboDish.getItems().clear();
-                            for (Dish dish : restaurant.getAllAvailableDishes()) {
+                            for (Dish dish : packages.getAllAvailableDishes()) {
                                 comboDish.getItems().add(dish.getName());
                             }
                         }
@@ -1164,8 +1154,8 @@ public class Main extends Application {
         GridPane.setConstraints(txtCustomerID, 1, 0);
         GridPane.setConstraints(labelOrderTime, 0, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
         GridPane.setConstraints(txtOrderTime, 1, 1);
-        GridPane.setConstraints(labelRestaurant, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
-        GridPane.setConstraints(comboRestaurant, 1, 2);
+        GridPane.setConstraints(labelPackage, 0, 2, 1, 1, HPos.RIGHT, VPos.CENTER);
+        GridPane.setConstraints(comboPackage, 1, 2);
         GridPane.setConstraints(labelDish, 0, 3, 1, 1, HPos.RIGHT, VPos.CENTER);
         GridPane.setConstraints(comboDish, 1, 3);
         GridPane.setConstraints(btnSC_ADD, 2, 3, 1, 2);
@@ -1175,7 +1165,7 @@ public class Main extends Application {
         GridPane.setConstraints(coordinateLabels, 1, 5);
         layoutSCTopLeft.getChildren().addAll(labelCustomerID, txtCustomerID,
                 labelOrderTime, txtOrderTime,
-                labelRestaurant, comboRestaurant,
+                labelPackage, comboPackage,
                 labelDish, comboDish, btnSC_ADD,
                 labelQuantity, spinnerQuantity,
                 labelDeliveryLoc, coordinateLabels);
@@ -1187,24 +1177,24 @@ public class Main extends Application {
         Button btnSC_DONE = new Button("Done");
         btnSC_DONE.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnSC_DONE.setOnAction(fn -> {
-            if (comboRestaurant.getSelectionModel().getSelectedItem() != null && !mapSC.isEmpty()) {
+            if (comboPackage.getSelectionModel().getSelectedItem() != null && !mapSC.isEmpty()) {
                 // add crabfood order to all crabfood orders
-                CrabFoodOrder cfOrder = new CrabFoodOrder();
-                cfOrder.setRestaurantName(comboRestaurant.getSelectionModel().getSelectedItem().toString());
+                PickUpOrder pOrder = new PickUpOrder();
+                pOrder.setPackageName(comboPackage.getSelectionModel().getSelectedItem().toString());
                 HashMap<String, Integer> dishOrders = new HashMap<>();
                 dishOrders.putAll(mapSC);
-                cfOrder.setDishOrders(dishOrders);
-                cfOrder.setDeliveryLocation(new Position(
+                pOrder.setDishOrders(dishOrders);
+                pOrder.setDeliveryLocation(new Position(
                         Integer.parseInt(spinnerX.getValue().toString()),
                         Integer.parseInt(spinnerY.getValue().toString())));
-                cfOrder.setCookTime(cfOrder.calculateCookTime());
-                cfOrder.setCustomerId(CrabFoodOperator.getTotalCrabFoodOrder().get() + 1);
-                CrabFoodOperator.getTotalCrabFoodOrder().set(CrabFoodOperator.getTotalCrabFoodOrder().get() + 1);
-                CrabFoodOperator.getAllCrabFoodOrders().add(cfOrder);
-                CrabFoodOperator.sortCfOrders();
+                pOrder.setCookTime(pOrder.calculateCookTime());
+                pOrder.setCustomerId(PickUpOperator.getTotalPickUpOrder().get() + 1);
+                PickUpOperator.getTotalPickUpOrder().set(PickUpOperator.getTotalPickUpOrder().get() + 1);
+                PickUpOperator.getAllPickUpOrders().add(pOrder);
+                PickUpOperator.sortCfOrders();
 
                 // reset all components
-                comboRestaurant.getSelectionModel().clearSelection();
+                comboPackage.getSelectionModel().clearSelection();
                 comboDish.getItems().clear();
                 spinnerQuantity.getValueFactory().setValue(1);
                 spinnerX.getValueFactory().setValue(1);
@@ -1218,7 +1208,7 @@ public class Main extends Application {
         btnSC_CANCEL.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnSC_CANCEL.setOnAction(fn -> {
             primaryStage.setScene(sceneMenu);
-            comboRestaurant.getSelectionModel().clearSelection();
+            comboPackage.getSelectionModel().clearSelection();
             comboDish.getSelectionModel().clearSelection();
             spinnerQuantity.getValueFactory().setValue(1);
             spinnerX.getValueFactory().setValue(1);
@@ -1247,26 +1237,26 @@ public class Main extends Application {
     }
 
     /* Describes the functions below.
-     * The first section of code creates a label for the restaurant name, followed by a text area for the user to input the name of the restaurant. 
-     * The second section creates a label for the restaurant location, followed by a grid pane for the user to input the location of the restaurant. 
-     * The third section creates a label for the dishes served at the restaurant, followed by a button to edit the dishes. 
+     * The first section of code creates a label for the packages name, followed by a text area for the user to input the name of the packages. 
+     * The second section creates a label for the packages location, followed by a grid pane for the user to input the location of the packages. 
+     * The third section creates a label for the dishes served at the packages, followed by a button to edit the dishes. 
      * The final section of code creates a grid pane to hold all of the elements, and sets the alignment of the labels.
-     * The makeSceneER() method is responsible for creating the scene for the Edit Restaurant page. This page allows the user to edit the name, location, and dishes served at a restaurant.
+     * The makeSceneER() method is responsible for creating the scene for the Edit Package page. This page allows the user to edit the name, location, and dishes served at a packages.
      */
     private void makeSceneER(Stage primaryStage) {
-        // Restaurant Name
-        Label labelRestaurantName = new Label("Name : ");
+        // Package Name
+        Label labelPackageName = new Label("Name : ");
 
-        txtareaRestaurantName.setPrefHeight(txtareaRestaurantName.DEFAULT_PREF_ROW_COUNT);
-        txtareaRestaurantName.setPrefWidth(500);
+        txtareaPackageName.setPrefHeight(txtareaPackageName.DEFAULT_PREF_ROW_COUNT);
+        txtareaPackageName.setPrefWidth(500);
 
-        // Restaurant Location
-        Label labelRestaurantLoc = new Label("Restaurant Location : ");
+        // Package Location
+        Label labelPackageLoc = new Label("Package Location : ");
 
-        gridRestaurantLoc.setPrefSize(700, 600);
-        gridRestaurantLoc.setMaxSize(700, 600);
+        gridPackageLoc.setPrefSize(700, 600);
+        gridPackageLoc.setMaxSize(700, 600);
 
-        ScrollPane gridPad = new ScrollPane(gridRestaurantLoc);
+        ScrollPane gridPad = new ScrollPane(gridPackageLoc);
         gridPad.setMaxSize(700, 600);
 
         // Dishes
@@ -1278,18 +1268,18 @@ public class Main extends Application {
 
         // #
         GridPane layoutERTop = new GridPane();
-        GridPane.setConstraints(labelRestaurantName, 0, 0);
-        GridPane.setConstraints(txtareaRestaurantName, 1, 0);
-        GridPane.setConstraints(labelRestaurantLoc, 0, 1);
+        GridPane.setConstraints(labelPackageName, 0, 0);
+        GridPane.setConstraints(txtareaPackageName, 1, 0);
+        GridPane.setConstraints(labelPackageLoc, 0, 1);
         GridPane.setConstraints(gridPad, 1, 1);
         GridPane.setConstraints(labelDishes, 0, 2);
         GridPane.setConstraints(btnER_EDs, 1, 2);
-        GridPane.setHalignment(labelRestaurantName, HPos.RIGHT);
-        GridPane.setHalignment(labelRestaurantLoc, HPos.RIGHT);
+        GridPane.setHalignment(labelPackageName, HPos.RIGHT);
+        GridPane.setHalignment(labelPackageLoc, HPos.RIGHT);
         GridPane.setHalignment(labelDishes, HPos.RIGHT);
         layoutERTop.setVgap(10);
-        layoutERTop.getChildren().addAll(labelRestaurantName, txtareaRestaurantName,
-                labelRestaurantLoc, gridPad,
+        layoutERTop.getChildren().addAll(labelPackageName, txtareaPackageName,
+                labelPackageLoc, gridPad,
                 labelDishes, btnER_EDs);
 
         layoutERTop.setAlignment(Pos.CENTER);
@@ -1300,7 +1290,7 @@ public class Main extends Application {
         btnER_DONE.setOnAction(fn -> {
             // flag to indicate if user inputted location(s)
             boolean hasPos = false;
-            for (Node tileObj : gridRestaurantLoc.getChildren()) {
+            for (Node tileObj : gridPackageLoc.getChildren()) {
                 Tile tile = (Tile) tileObj;
                 if (tile.isBlue()) {
                     hasPos = true;
@@ -1308,20 +1298,20 @@ public class Main extends Application {
                 }
             }
 
-            if (!txtareaRestaurantName.getText().isEmpty() && hasPos && !obsListDishes.isEmpty()) {
+            if (!txtareaPackageName.getText().isEmpty() && hasPos && !obsListDishes.isEmpty()) {
                 if (flagAddRes) {
-                    String restaurantName = "";
-                    Character restaurantMapSymbol = '0';
+                    String packageName = "";
+                    Character packageMapSymbol = '0';
 
-                    // read restaurant name
-                    restaurantName = txtareaRestaurantName.getText();
+                    // read packages name
+                    packageName = txtareaPackageName.getText();
 
-                    // read restaurant map symbol
-                    restaurantMapSymbol = restaurantName.charAt(0);
+                    // read packages map symbol
+                    packageMapSymbol = packageName.charAt(0);
 
-                    // read restaurant positions 
+                    // read packages positions 
                     ArrayList<Position> resLoc = new ArrayList<>();
-                    for (Node tileObj : gridRestaurantLoc.getChildren()) {
+                    for (Node tileObj : gridPackageLoc.getChildren()) {
                         Tile tile = (Tile) tileObj;
                         if (tile.isBlue()) {
                             resLoc.add(new Position(GridPane.getColumnIndex(tileObj),
@@ -1329,48 +1319,48 @@ public class Main extends Application {
                         }
                     }
 
-                    // read restaurant dishes
+                    // read packages dishes
                     ArrayList<Dish> dishes = new ArrayList<>(dishesToAddTemp);
                     dishesToAddTemp.clear();
                     
                     // after reading, set name, map symbol, positions & dishes
                     for (int i = 0; i < resLoc.size(); i++) {
-                        CrabFoodOperator.getPartnerRestaurants().add(new Restaurant(
-                                restaurantName,
-                                restaurantMapSymbol,
+                        PickUpOperator.getPartnerPackages().add(new Package(
+                                packageName,
+                                packageMapSymbol,
                                 resLoc.get(i),
                                 (ArrayList<Dish>) dishes.clone()));
                     }
 
                     flagAddRes = false;
                 } else {
-                    // update restaurant name
-                    if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                        for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                            if (restaurant.getName().equals(resToEdit.getValue())) {
-                                restaurant.setName(txtareaRestaurantName.getText());
+                    // update packages name
+                    if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                        for (Package packages : PickUpOperator.getPartnerPackages()) {
+                            if (packages.getName().equals(resToEdit.getValue())) {
+                                packages.setName(txtareaPackageName.getText());
                             }
                         }
                     }
-                    // update restaurant locations
+                    // update packages locations
                     ArrayList<Position> resLoc = new ArrayList<>();
-                    for (Node tileObj : gridRestaurantLoc.getChildren()) {
+                    for (Node tileObj : gridPackageLoc.getChildren()) {
                         Tile tile = (Tile) tileObj;
                         if (tile.isBlue()) {
                             resLoc.add(new Position(GridPane.getColumnIndex(tileObj),
                                     GridPane.getRowIndex(tileObj)));
                         }
                     }
-                    String restaurantName = "";
-                    Character restaurantMapSymbol = '0';
+                    String packageName = "";
+                    Character packageMapSymbol = '0';
                     ArrayList<Dish> dishes = new ArrayList<>();
-                    if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                        Iterator itrRes = CrabFoodOperator.getPartnerRestaurants().iterator();
+                    if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                        Iterator itrRes = PickUpOperator.getPartnerPackages().iterator();
                         while (itrRes.hasNext()) {
-                            Restaurant res = (Restaurant) itrRes.next();
-                            if (res.getName().equals(txtareaRestaurantName.getText())) {
-                                restaurantName = res.getName();
-                                restaurantMapSymbol = res.getMapSymbol();
+                            Package res = (Package) itrRes.next();
+                            if (res.getName().equals(txtareaPackageName.getText())) {
+                                packageName = res.getName();
+                                packageMapSymbol = res.getMapSymbol();
                                 dishes = (ArrayList<Dish>) res.getAllAvailableDishes().clone();
                                 itrRes.remove();
                             }
@@ -1378,26 +1368,26 @@ public class Main extends Application {
                     }
                     if (!resLoc.isEmpty()) {
                         for (int i = 0; i < resLoc.size(); i++) {
-                            CrabFoodOperator.getPartnerRestaurants().add(new Restaurant(restaurantName,
-                                    restaurantMapSymbol, resLoc.get(i),
+                            PickUpOperator.getPartnerPackages().add(new Package(packageName,
+                                    packageMapSymbol, resLoc.get(i),
                                     (ArrayList<Dish>) dishes.clone()));
                         }
                     }
                 }
 
                 // reset sceneMR
-                obsListRestaurant.clear();
-                if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                    for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                        if (!obsListRestaurant.contains(restaurant.getName())) {
-                            obsListRestaurant.add(restaurant.getName());
+                obsListPackage.clear();
+                if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                    for (Package packages : PickUpOperator.getPartnerPackages()) {
+                        if (!obsListPackage.contains(packages.getName())) {
+                            obsListPackage.add(packages.getName());
                         }
                     }
                 }
 
                 // reset input fields
-                txtareaRestaurantName.clear();
-                for (Object tileObj : gridRestaurantLoc.getChildren()) {
+                txtareaPackageName.clear();
+                for (Object tileObj : gridPackageLoc.getChildren()) {
                     Tile tile = (Tile) tileObj;
                     if (!tile.getText().equals("0")) {
                         tile.colorTileNull();
@@ -1407,7 +1397,7 @@ public class Main extends Application {
                 }
 
                 // update map as soon as map changes
-                CrabFoodOperator.getMasterMap().updateMap();
+                PickUpOperator.getMasterMap().updateMap();
 
                 // clear stuff in edit
                 resToEdit.setValue("");
@@ -1421,8 +1411,8 @@ public class Main extends Application {
         btnER_CANCEL.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         btnER_CANCEL.setOnAction(fn -> {
             // reset input fields
-            txtareaRestaurantName.clear();
-            for (Object tileObj : gridRestaurantLoc.getChildren()) {
+            txtareaPackageName.clear();
+            for (Object tileObj : gridPackageLoc.getChildren()) {
                 Tile tile = (Tile) tileObj;
                 if (!tile.getText().equals("0")) {
                     tile.colorTileNull();
@@ -1473,10 +1463,10 @@ public class Main extends Application {
                 txtareaDishName.setText(dishToEdit.getValue());
 
                 // put the dish's prep time to be edit in sceneED
-                if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                    for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                        if (!restaurant.getAllAvailableDishes().isEmpty()) {
-                            for (Dish dish : restaurant.getAllAvailableDishes()) {
+                if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                    for (Package packages : PickUpOperator.getPartnerPackages()) {
+                        if (!packages.getAllAvailableDishes().isEmpty()) {
+                            for (Dish dish : packages.getAllAvailableDishes()) {
                                 if (dish.getName().equals(dishToEdit.getValue())) {
                                     spinnerDishPrepTime.getValueFactory().setValue(dish.getFoodPrepareDuration());
                                     break;
@@ -1520,12 +1510,12 @@ public class Main extends Application {
                 listDishes.getSelectionModel().clearSelection();
             }
 
-            // reset the dishes of restaurant in edit
+            // reset the dishes of packages in edit
             obsListDishes.clear();
-            if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                    if (!obsListDishes.contains(restaurant.getName())) {
-                        obsListDishes.add(restaurant.getName());
+            if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                for (Package packages : PickUpOperator.getPartnerPackages()) {
+                    if (!obsListDishes.contains(packages.getName())) {
+                        obsListDishes.add(packages.getName());
                     }
                 }
             }
@@ -1543,10 +1533,10 @@ public class Main extends Application {
                 }
 
                 // if obsListDishes does not contain certain dishes, remove them
-                if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                    for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                        if (!restaurant.getAllAvailableDishes().isEmpty()) {
-                            Iterator itrAllAvailableDishes = restaurant.getAllAvailableDishes().iterator();
+                if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                    for (Package packages : PickUpOperator.getPartnerPackages()) {
+                        if (!packages.getAllAvailableDishes().isEmpty()) {
+                            Iterator itrAllAvailableDishes = packages.getAllAvailableDishes().iterator();
                             while (itrAllAvailableDishes.hasNext()) {
                                 Dish dish = (Dish) itrAllAvailableDishes.next();
                                 if (!obsListDishes.contains(dish.getName())) {
@@ -1631,11 +1621,11 @@ public class Main extends Application {
                     flagAddDish = false;
                 } else {
                     // edit dish, update dish name & dish prep time
-                    if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                        for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                            if (restaurant.getName().equals(resToEdit.getValue())) {
-                                if (!restaurant.getAllAvailableDishes().isEmpty()) {
-                                    for (Dish dish : restaurant.getAllAvailableDishes()) {
+                    if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                        for (Package packages : PickUpOperator.getPartnerPackages()) {
+                            if (packages.getName().equals(resToEdit.getValue())) {
+                                if (!packages.getAllAvailableDishes().isEmpty()) {
+                                    for (Dish dish : packages.getAllAvailableDishes()) {
                                         if (dish.getName().equals(dishToEdit.getValue())) {
                                             dish.setName(txtareaDishName.getText());
                                             dish.setFoodPrepareDuration(Integer.parseInt(spinnerDishPrepTime.getValue().toString()));
@@ -1650,11 +1640,11 @@ public class Main extends Application {
 
                 // read the updated dishes to display in sceneEDs
                 obsListDishes.clear();
-                if (!CrabFoodOperator.getPartnerRestaurants().isEmpty()) {
-                    for (Restaurant restaurant : CrabFoodOperator.getPartnerRestaurants()) {
-                        if (restaurant.getName().equals(resToEdit.getValue())) {
-                            if (!restaurant.getAllAvailableDishes().isEmpty()) {
-                                for (Dish dish : restaurant.getAllAvailableDishes()) {
+                if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+                    for (Package packages : PickUpOperator.getPartnerPackages()) {
+                        if (packages.getName().equals(resToEdit.getValue())) {
+                            if (!packages.getAllAvailableDishes().isEmpty()) {
+                                for (Dish dish : packages.getAllAvailableDishes()) {
                                     obsListDishes.add(dish.getName());
                                 }
                             }
@@ -1713,7 +1703,7 @@ public class Main extends Application {
      * The setOnMouseClicked method sets an event handler for when the tile is clicked. This event handler will change the color of the tile depending on its current color. 
      * The isBlue and isGrey methods are used to check the color of the tile. These methods will be used later in the code.
      */
-    public class Tile extends StackPane {
+    private class Tile extends StackPane {
 
         Text text;
         Rectangle border;
@@ -1768,3 +1758,4 @@ public class Main extends Application {
         }
     }
 
+}

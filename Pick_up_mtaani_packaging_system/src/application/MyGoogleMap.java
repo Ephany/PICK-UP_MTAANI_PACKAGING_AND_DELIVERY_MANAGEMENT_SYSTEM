@@ -15,7 +15,7 @@ public class MyGoogleMap {
     private ArrayList<ArrayList<Character>> map = new ArrayList<>();
     private ArrayList<Position> allPackagePositions = new ArrayList<>();
     /**
-     * Positions of restaurants in "partner-restaurant.txt" always overweigh the
+     * Positions of restaurants in "partner-packages.txt" always overweigh the
      * their positions previously recorded in this class.
      */
     private int width = 0;
@@ -66,14 +66,14 @@ public class MyGoogleMap {
     }
 
     /**
-     * read all restaurant positions again & reprint map into "map.txt"
+     * read all packages positions again & reprint map into "map.txt"
      */
     public void updateMap() {
         PrintWriter pw = null;
 
-        // take a list of all restaurant positions taken from "partner-restaurant.txt"
+        // take a list of all packages positions taken from "partner-packages.txt"
         if (!hasOverlappedPositions()) {
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 allPackagePositions.add(packages.getPosition());
             }
 
@@ -100,7 +100,7 @@ public class MyGoogleMap {
                 map.add((ArrayList<Character>) myList.clone());
             }
 
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 map.get(packages.getPosition().getPosY()).set(packages.getPosition().getPosX(), packages.getMapSymbol());
             }
 
@@ -143,7 +143,7 @@ public class MyGoogleMap {
 
     public boolean hasOverlappedPositions() {
         ArrayBag<String> allPositions = new ArrayBag<>();
-        for (Package packages : PackageOperator.getPartnerPackage()) {
+        for (Package packages : PickUpOperator.getPartnerPackages()) {
             allPositions.add(packages.getPosition().toString());
         }
 

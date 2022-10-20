@@ -1,7 +1,6 @@
-package application;
+package  application;
 
 import application.DeliveryGuy.DeliverySession;
-
 import static application.Main.clock;
 import application.MyGoogleMap.Position;
 import application.Package.Dish;
@@ -22,38 +21,38 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-class PackageOperator {
+class PickUpOperator {
 
-    private static IntegerProperty totalPackageOrder;
-    private static ArrayList<PackageOrder> allPresetPackageOrders;
-    private static ArrayList<Package> partnerPackage;
+    private static IntegerProperty totalPickUpOrder;
+    private static ArrayList<PickUpOrder> allPresetPickUpOrders;
+    private static ArrayList<Package> partnerPackages;
     private static ArrayList<DeliveryGuy> allDeliveryGuys;
-    private static ArrayList<PackageOrder> allPackageOrders;
+    private static ArrayList<PickUpOrder> allPickUpOrders;
     private static StringProperty log;
     private static StringProperty process;
     private static MyGoogleMap masterMap;
 
-    public PackageOperator() {
-    	PackageOperator.totalPackageOrder = new SimpleIntegerProperty(0);
+    public PickUpOperator() {
+        PickUpOperator.totalPickUpOrder = new SimpleIntegerProperty(0);
 
-        // set partner partner restaurants (read now & update later)
-        PackageOperator.partnerPackage = new ArrayList<>();
-        readPartnerPackage();
+        // set partner partner packages (read now & update later)
+        PickUpOperator.partnerPackages = new ArrayList<>();
+        readPartnerPackages();
 
         // set & update master map (read now & update now)
-        PackageOperator.masterMap = new MyGoogleMap();
+        PickUpOperator.masterMap = new MyGoogleMap();
         masterMap.updateMap();
 
         // set all delivery guys (read now & update later)
-        PackageOperator.allDeliveryGuys = new ArrayList<>();
+        PickUpOperator.allDeliveryGuys = new ArrayList<>();
         readAllDeliveryGuys();
 
-        // set all preset CrabFood orders
-        PackageOperator.allPresetPackageOrders = new ArrayList<>();
-        readAllPresetPackageOrders();
+        // set all preset PickUp orders
+        PickUpOperator.allPresetPickUpOrders = new ArrayList<>();
+        readAllPresetPickUpOrders();
 
-        // initalize CrabFood orders
-        PackageOperator.allPackageOrders = new ArrayList<>();
+        // initalize PickUp orders
+        PickUpOperator.allPickUpOrders = new ArrayList<>();
 
         // set log (read now & update later)
         log = new SimpleStringProperty("");
@@ -64,12 +63,12 @@ class PackageOperator {
     }
 
     /**
-     * Allocate CrabFood orders to delivery men by their empty slots
+     * Allocate PickUp orders to delivery men by their empty slots
      */
-    public static void allocateDeliveryByFinishTime(PackageOrder pOrder) {
+    public static void allocateDeliveryByFinishTime(PickUpOrder pOrder) {
         // find earliest delivery end time among all delivery guys
         String earliest = "23:59";
-        for (DeliveryGuy deliveryGuy : PackageOperator.getAllDeliveryGuys()) {
+        for (DeliveryGuy deliveryGuy : PickUpOperator.getAllDeliveryGuys()) {
             if (deliveryGuy.getAllDeliverySession().isEmpty()) {
                 earliest = clock.getTime();
                 break;
@@ -84,13 +83,13 @@ class PackageOperator {
         // find delivery men with earliest delivery end time
         ArrayList<DeliveryGuy> menWithEarliest = new ArrayList<>();
         if (earliest.equals(clock.getTime())) {
-            for (DeliveryGuy deliveryGuy : PackageOperator.getAllDeliveryGuys()) {
+            for (DeliveryGuy deliveryGuy : PickUpOperator.getAllDeliveryGuys()) {
                 if (deliveryGuy.getAllDeliverySession().isEmpty()) {
                     menWithEarliest.add(deliveryGuy);
                 }
             }
         } else {
-            for (DeliveryGuy deliveryGuy : PackageOperator.getAllDeliveryGuys()) {
+            for (DeliveryGuy deliveryGuy : PickUpOperator.getAllDeliveryGuys()) {
                 String prevDeliveryEndTime = deliveryGuy.getAllDeliverySession().get(deliveryGuy.getAllDeliverySession().size() - 1).getDeliveryEndTime();
                 if (earliest.equals(prevDeliveryEndTime)) {
                     menWithEarliest.add(deliveryGuy);
@@ -100,19 +99,19 @@ class PackageOperator {
 
         // if more than 1 man has earliest delivery end time, allocate delivery by closest distance ONLY to these men
         if (menWithEarliest.size() > 1) {
-        	PackageOperator.allocateDeliveryByDistance(menWithEarliest, pOrder);
+            PickUpOperator.allocateDeliveryByDistance(menWithEarliest, pOrder);
         } else {
             // only 1 man has earliest delivery end time
             DeliveryGuy theGuy = null;
             if (earliest.equals(clock.getTime())) {
-                for (DeliveryGuy deliveryGuy : PackageOperator.getAllDeliveryGuys()) {
+                for (DeliveryGuy deliveryGuy : PickUpOperator.getAllDeliveryGuys()) {
                     if (deliveryGuy.getAllDeliverySession().isEmpty()) {
                         theGuy = deliveryGuy;
                         break;
                     }
                 }
             } else {
-                for (DeliveryGuy deliveryGuy : PackageOperator.getAllDeliveryGuys()) {
+                for (DeliveryGuy deliveryGuy : PickUpOperator.getAllDeliveryGuys()) {
                     String prevDeliveryEndTime = deliveryGuy.getAllDeliverySession().get(deliveryGuy.getAllDeliverySession().size() - 1).getDeliveryEndTime();
                     if (earliest.equals(prevDeliveryEndTime)) {
                         theGuy = deliveryGuy;
@@ -135,7 +134,7 @@ class PackageOperator {
             theGuy.getAllDeliverySession().add(new DeliverySession(pOrder, startTime, endTime));
 
             // update process
-            PackageOperator.appendToProcess(String.format("Delivery man %d at %s takes the order of customer %d at branch of %s at %s.",
+            PickUpOperator.appendToProcess(String.format("Delivery man %d at %s takes the order of customer %d at branch of %s at %s.",
                     theGuy.getDeliveryGuyId(),
                     theGuy.getCurrentPosition(),
                     pOrder.getCustomerId(),
@@ -146,15 +145,15 @@ class PackageOperator {
     }
 
     /**
-     * Allocate CrabFood orders to Delivery Men by their distance with branch &
+     * Allocate PickUp orders to Delivery Men by their distance with branch &
      * customer
      *
      * @param guys List of delivery guys with same previous order finish
      * delivery time
      * @param order Order to be allocated to one of these delivery guys
      */
-    public static void allocateDeliveryByDistance(ArrayList<DeliveryGuy> guys, PackageOrder pOrder) {
-        // get min distance for delivery guy to get to restaurant branch & then customer
+    public static void allocateDeliveryByDistance(ArrayList<DeliveryGuy> guys, PickUpOrder pOrder) {
+        // get min distance for delivery guy to get to packages branch & then customer
         int minDistance = Integer.MAX_VALUE;
         for (DeliveryGuy guy : guys) {
             int distance = MyGoogleMap.getDistance(guy.getCurrentPosition(), pOrder.getBranchLocation());
@@ -178,7 +177,7 @@ class PackageOperator {
                 deliveryGuy.getAllDeliverySession().add(new DeliverySession(pOrder, startTime, endTime));
 
                 // update process
-                PackageOperator.appendToProcess(String.format("Delivery man %d at %s takes the order of customer %d at branch of %s at %s.",
+                PickUpOperator.appendToProcess(String.format("Delivery man %d at %s takes the order of customer %d at branch of %s at %s.",
                         deliveryGuy.getDeliveryGuyId(),
                         deliveryGuy.getCurrentPosition(),
                         pOrder.getCustomerId(),
@@ -191,13 +190,13 @@ class PackageOperator {
     }
 
     /**
-     * Allocate CrabFood orders to restaurants by distance
+     * Allocate PickUp orders to packages by distance
      */
-    public static void allocateOrderByDistance(PackageOrder pOrder) {
+    public static void allocateOrderByDistance(PickUpOrder pOrder) {
         // find closest branch
         int smallestDistance = Integer.MAX_VALUE;
-        if (!PackageOperator.getPartnerPackage().isEmpty()) {
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (pOrder.getPackageName().equals(packages.getName())) {
                     int distance = MyGoogleMap.getDistance(pOrder.getDeliveryLocation(), packages.getPosition());
                     smallestDistance = smallestDistance > distance ? distance : smallestDistance;
@@ -206,8 +205,8 @@ class PackageOperator {
         }
 
         // allocate to closest branch
-        if (!PackageOperator.getPartnerPackage().isEmpty()) {
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (pOrder.getPackageName().equals(packages.getName())) {
                     int distance = MyGoogleMap.getDistance(pOrder.getDeliveryLocation(), packages.getPosition());
                     if (smallestDistance == distance) {
@@ -223,7 +222,7 @@ class PackageOperator {
                                 pOrder.getCustomerId()));
 
                         // update process
-                        PackageOperator.appendToProcess(String.format("Branch of %s at %s takes the order.",
+                        PickUpOperator.appendToProcess(String.format("Branch of %s at %s takes the order.",
                                 pOrder.getPackageName(),
                                 pOrder.getBranchLocation()));
 
@@ -253,7 +252,7 @@ class PackageOperator {
      */
     public static void readLog() {
         try {
-            Scanner s = new Scanner(new FileInputStream("crabfood-io/log.txt"));
+            Scanner s = new Scanner(new FileInputStream("application-io/log.txt"));
             while (s.hasNextLine()) {
                 log.set(log.concat(s.nextLine() + "\n").get());
             }
@@ -274,7 +273,7 @@ class PackageOperator {
         // append externally to "log.txt"
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileOutputStream("crabfood-io/log.txt", true));
+            pw = new PrintWriter(new FileOutputStream("application-io/log.txt", true));
             pw.print(lineToAppend);
         } catch (FileNotFoundException ex) {
             System.out.println("\"log.txt\" not found.");
@@ -284,23 +283,23 @@ class PackageOperator {
     }
 
     /**
-     * update partner restaurants to "partner-restaurant.txt"
+     * update partner packages to "partner-packages.txt"
      */
-    public static void updatePartnerPackage() {
+    public static void updatePartnerPackages() {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileOutputStream("crabfood-io/partner-restaurant.txt"));
+            pw = new PrintWriter(new FileOutputStream("application-io/partner-packages.txt"));
             ArrayList<String> printedRes = new ArrayList<>();
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (!printedRes.contains(packages.getName())) {
                     printedRes.add(packages.getName());
-                    pw.println(Package.getName());
+                    pw.println(packages.getName());
                     pw.print(Package.toTxtPositions(packages.getName()));
                     pw.print(Package.toTxtDishes(packages.getName()) + "\n");
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("\"partner-restaurant.txt\" not found.");
+            System.out.println("\"partner-packages.txt\" not found.");
         } finally {
             if (pw != null) {
                 pw.close();
@@ -309,26 +308,26 @@ class PackageOperator {
     }
 
     /**
-     * load previously saved "partner-restaurant.txt"
+     * load previously saved "partner-packages.txt"
      */
-    public static void readPartnerPackage() {
-        if (!PackageOperator.getPartnerPackage().isEmpty()) {
-        	PackageOperator.getPartnerPackage().clear();
+    public static void readPartnerPackages() {
+        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+            PickUpOperator.getPartnerPackages().clear();
         }
 
         try {
-            Scanner s = new Scanner(new FileInputStream("crabfood-io/partner-restaurant.txt"));
+            Scanner s = new Scanner(new FileInputStream("application-io/partner-packages.txt"));
 
             while (s.hasNextLine()) {
-            	Package packages = new Package();
+                Package packages = new Package();
 
-                // read restaurant name
+                // read packages name
                 String packageName = s.nextLine();
 
-                // read restaurant map symbol
+                // read packages map symbol
                 Character packageMapSymbol = packageName.charAt(0);
 
-                // read restaurant positions & dishes
+                // read packages positions & dishes
                 ArrayList<Position> packagePositions = new ArrayList<>();
                 ArrayList<Dish> dishes = new ArrayList<>();
                 int posCount = 0;
@@ -352,13 +351,13 @@ class PackageOperator {
 
                 // after reading, set name, map symbol, positions & dishes
                 for (int i = 0; i < posCount; i++) {
-                    partnerPackage.add(new Package(packageName,
-                    		packageMapSymbol, packagePositions.get(i),
+                    partnerPackages.add(new Package(packageName,
+                            packageMapSymbol, packagePositions.get(i),
                             (ArrayList<Dish>) dishes.clone()));
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("\"partner-restaurant.txt\" not found.");
+            System.out.println("\"partner-packages.txt\" not found.");
         }
     }
 
@@ -366,12 +365,12 @@ class PackageOperator {
      * load previously saved "delivery-guy.txt"
      */
     public static void readAllDeliveryGuys() {
-        if (!PackageOperator.getAllDeliveryGuys().isEmpty()) {
-        	PackageOperator.getAllDeliveryGuys().clear();
+        if (!PickUpOperator.getAllDeliveryGuys().isEmpty()) {
+            PickUpOperator.getAllDeliveryGuys().clear();
         }
 
         try {
-            Scanner s = new Scanner(new FileInputStream("crabfood-io/delivery-guy.txt"));
+            Scanner s = new Scanner(new FileInputStream("application-io/delivery-guy.txt"));
 
             int numDeliveryGuy = 0;
             while (s.hasNextInt()) {
@@ -395,7 +394,7 @@ class PackageOperator {
     public static void updateAllDeliveryGuys() {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileOutputStream("crabfood-io/delivery-guy.txt"));
+            pw = new PrintWriter(new FileOutputStream("application-io/delivery-guy.txt"));
             pw.print(allDeliveryGuys.size());
             clock.resetTime();
         } catch (FileNotFoundException ex) {
@@ -408,24 +407,24 @@ class PackageOperator {
     }
 
     /**
-     * Load preset CrabFood orders from "crabfood-order.txt" Time must be sorted
+     * Load preset PickUp orders from "application-order.txt" Time must be sorted
      */
-    public static void readAllPresetPackageOrders() {
-        if (!PackageOperator.getAllPresetPackageOrders().isEmpty()) {
-        	PackageOperator.getAllPresetPackageOrders().clear();
+    public static void readAllPresetPickUpOrders() {
+        if (!PickUpOperator.getAllPresetPickUpOrders().isEmpty()) {
+            PickUpOperator.getAllPresetPickUpOrders().clear();
         }
 
         try {
-            Scanner s = new Scanner(new FileInputStream("crabfood-io/preset-crabfood-order.txt"));
+            Scanner s = new Scanner(new FileInputStream("application-io/preset-application-order.txt"));
 
             while (s.hasNextLine()) {
-            	PackageOrder packageOrder = new packageOrder();
+                PickUpOrder pickUpOrder = new PickUpOrder();
 
                 // read order time
                 String orderTime = SimulatedTime.parseTimeToString(s.nextLine());
 
-                // read restaurant
-                String restaurantName = s.nextLine();
+                // read packages
+                String packageName = s.nextLine();
 
                 // read dish orders & quantity
                 HashMap<String, Integer> dishOrders = new HashMap<>();
@@ -452,58 +451,58 @@ class PackageOperator {
                     }
                 }
 
-                packageOrder.setPackageName(packageName);
-                packageOrder.setDishOrders(dishOrders);
-                packageOrder.setDeliveryLocation(deliveryLocation);
-                packageOrder.setCookTime(packageOrder.calculateCookTime());
-                packageOrder.setOrderTime(orderTime);
+                pickUpOrder.setPackageName(packageName);
+                pickUpOrder.setDishOrders(dishOrders);
+                pickUpOrder.setDeliveryLocation(deliveryLocation);
+                pickUpOrder.setCookTime(pickUpOrder.calculateCookTime());
+                pickUpOrder.setOrderTime(orderTime);
 
-                allPresetPackageOrders.add(packageOrder);
+                allPresetPickUpOrders.add(pickUpOrder);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("\"crabfood-order.txt\" not found.");
+            System.out.println("\"application-order.txt\" not found.");
         }
     }
 
     /**
-     * sort CrabFood orders whenever any new order is inserted
+     * sort PickUp orders whenever any new order is inserted
      */
-    public static void sortpOrders() {
-        if (!allPackageOrders.isEmpty()) {
-            // sort allCrabFoodOrders by order time 
+    public static void sortCfOrders() {
+        if (!allPickUpOrders.isEmpty()) {
+            // sort allPickUpOrders by order time 
             ArrayList<String> timeList = new ArrayList<>();
-            for (PackageOrder pOrder : allPackageOrders) {
+            for (PickUpOrder pOrder : allPickUpOrders) {
                 if (!timeList.contains(pOrder.getOrderTime())) {
                     timeList.add(pOrder.getOrderTime());
                 }
             }
-            PackageOperator.selectionSort(timeList);
+            PickUpOperator.selectionSort(timeList);
 
-            ArrayList<PackageOrder> sortedpOrders = new ArrayList<>();
+            ArrayList<PickUpOrder> sortedCfOrders = new ArrayList<>();
             Iterator itrTimeList = timeList.iterator();
             while (itrTimeList.hasNext()) {
                 String time = (String) itrTimeList.next();
-                for (PackageOrder pOrder : allPackageOrders) {
+                for (PickUpOrder pOrder : allPickUpOrders) {
                     if (pOrder.getOrderTime().equals(time)) {
-                        sortedpOrders.add(pOrder);
+                        sortedCfOrders.add(pOrder);
                     }
                 }
                 itrTimeList.remove();
             }
 
-            allPackageOrders.clear();
-            allPackageOrders = sortedpOrders;
+            allPickUpOrders.clear();
+            allPickUpOrders = sortedCfOrders;
 
             // rearrange customerId according to order time
             ArrayList<Integer> sortedCusId = new ArrayList<>();
-            for (PackageOrder pOrder : allPackageOrders) {
+            for (PickUpOrder pOrder : allPickUpOrders) {
                 sortedCusId.add(pOrder.getCustomerId());
             }
 
             Collections.sort(sortedCusId);
 
             int i = 0;
-            for (PackageOrder pOrder : allPackageOrders) {
+            for (PickUpOrder pOrder : allPickUpOrders) {
                 pOrder.setCustomerId(sortedCusId.get(i));
                 i++;
             }
@@ -530,20 +529,20 @@ class PackageOperator {
         }
     }
 
-    public static IntegerProperty getTotalPackageOrder() {
-        return totalPackageOrder;
+    public static IntegerProperty getTotalPickUpOrder() {
+        return totalPickUpOrder;
     }
 
-    public static void setTotalPackageOrder(IntegerProperty totalPackageOrder) {
-    	PackageOperator.totalPackageOrder = totalPackageOrder;
+    public static void setTotalPickUpOrder(IntegerProperty totalPickUpOrder) {
+        PickUpOperator.totalPickUpOrder = totalPickUpOrder;
     }
 
-    public static ArrayList<PackageOrder> getAllPresetPackageOrders() {
-        return allPresetPackageOrders;
+    public static ArrayList<PickUpOrder> getAllPresetPickUpOrders() {
+        return allPresetPickUpOrders;
     }
 
-    public static void setAllPresetPackageOrders(ArrayList<PackageOrder> allPresetPackageOrders) {
-    	PackageOperator.allPresetPackageOrders = allPresetPackageOrders;
+    public static void setAllPresetPickUpOrders(ArrayList<PickUpOrder> allPresetPickUpOrders) {
+        PickUpOperator.allPresetPickUpOrders = allPresetPickUpOrders;
     }
 
     public static StringProperty getProcess() {
@@ -551,7 +550,7 @@ class PackageOperator {
     }
 
     public static void setProcess(StringProperty process) {
-    	PackageOperator.process = process;
+        PickUpOperator.process = process;
     }
 
     public static StringProperty getLog() {
@@ -559,7 +558,7 @@ class PackageOperator {
     }
 
     public static void setLog(StringProperty log) {
-    	PackageOperator.log = log;
+        PickUpOperator.log = log;
     }
 
     public static MyGoogleMap getMasterMap() {
@@ -567,23 +566,23 @@ class PackageOperator {
     }
 
     public static void setMasterMap(MyGoogleMap masterMap) {
-    	PackageOperator.masterMap = masterMap;
+        PickUpOperator.masterMap = masterMap;
     }
 
-    public static ArrayList<Package> getPartnerPackage() {
-        return partnerPackage;
+    public static ArrayList<Package> getPartnerPackages() {
+        return partnerPackages;
     }
 
-    public static void setPartnerPackage(ArrayList<Package> partnerPackage) {
-    	PackageOperator.partnerPackage = partnerPackage;
+    public static void setPartnerPackages(ArrayList<Package> partnerPackages) {
+        PickUpOperator.partnerPackages = partnerPackages;
     }
 
-    public static ArrayList<PackageOrder> getAllPackageOrders() {
-        return allPackageOrders;
+    public static ArrayList<PickUpOrder> getAllPickUpOrders() {
+        return allPickUpOrders;
     }
 
-    public static void setAllPackageOrders(ArrayList<PackageOrder> allPackageOrders) {
-    	PackageOperator.allPackageOrders = allPackageOrders;
+    public static void setAllPickUpOrders(ArrayList<PickUpOrder> allPickUpOrders) {
+        PickUpOperator.allPickUpOrders = allPickUpOrders;
     }
 
     public static ArrayList<DeliveryGuy> getAllDeliveryGuys() {
@@ -591,22 +590,22 @@ class PackageOperator {
     }
 
     public static void setAllDeliveryGuys(ArrayList<DeliveryGuy> allDeliveryGuys) {
-    	PackageOperator.allDeliveryGuys = allDeliveryGuys;
+        PickUpOperator.allDeliveryGuys = allDeliveryGuys;
     }
 
-    public static class PackageOrder {
+    public static class PickUpOrder {
 
         // if not stated "later", then set upon creation
         private Integer customerId; // set later
         private String orderTime;
-        private String restaurantName;
+        private String packageName;
         private HashMap<String, Integer> dishOrders;
         private Position deliveryLocation;
         private Position branchLocation; // set later
         private StringProperty status; // set later
         private int cookTime;
 
-        public PackageOrder(String packageName, HashMap<String, Integer> dishOrders, Position deliveryLocation) {
+        public PickUpOrder(String packageName, HashMap<String, Integer> dishOrders, Position deliveryLocation) {
             this.customerId = -1;
             this.orderTime = clock.getTime();
             this.packageName = packageName;
@@ -617,7 +616,7 @@ class PackageOperator {
             this.cookTime = -1;
         }
 
-        public PackageOrder() {
+        public PickUpOrder() {
             this.customerId = -1;
             this.orderTime = clock.getTime();
             this.packageName = "no name";
@@ -646,7 +645,7 @@ class PackageOperator {
 
         public int calculateCookTime() {
             int duration = -1;
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (packageName.trim().equals(packages.getName().trim())) {
                     for (Map.Entry dish : dishOrders.entrySet()) {
                         int timeNeeded = packages.getCookTime(dish.getKey().toString()) * Integer.parseInt(dish.getValue().toString());
@@ -683,9 +682,9 @@ class PackageOperator {
         }
 
         /**
-         * Just in case if need to write to "preset-crabfood-order.txt"
+         * Just in case if need to write to "preset-application-order.txt"
          *
-         * @return CrabFoodOrder string
+         * @return PickUpOrder string
          */
         public String toTxtString() {
             String result = "";

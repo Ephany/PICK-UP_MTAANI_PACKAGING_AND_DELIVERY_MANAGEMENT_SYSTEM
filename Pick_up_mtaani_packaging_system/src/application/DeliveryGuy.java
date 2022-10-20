@@ -1,6 +1,6 @@
 package application;
 
-import application.PackageOperator.PackageOrder;
+import application.PickUpOperator.PickUpOrder;
 import static application.Main.clock;
 import application.MyGoogleMap.Position;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ class DeliveryGuy {
         int x = 0;
         int y = 0;
         int count = 0;
-        for (Package packages : PackageOperator.getPartnerPackage()) {
+        for (Package packages : PickUpOperator.getPartnerPackages()) {
             x += packages.getPosition().getPosX();
             y += packages.getPosition().getPosY();
             count++;
@@ -39,7 +39,7 @@ class DeliveryGuy {
         x = x / count;
         y = y / count;
 
-        for (DeliveryGuy guy : PackageOperator.getAllDeliveryGuys()) {
+        for (DeliveryGuy guy : PickUpOperator.getAllDeliveryGuys()) {
             guy.setCurrentPosition(new Position(x, y));
             guy.setOriginalPosition(new Position(x, y));
         }
@@ -49,28 +49,28 @@ class DeliveryGuy {
      * update all delivery guy's position every simulated clock tick
      */
     public static void updateAllDeliveryGuyPos() {
-        if (!PackageOperator.getAllDeliveryGuys().isEmpty()) {
-            for (DeliveryGuy guy : PackageOperator.getAllDeliveryGuys()) {
+        if (!PickUpOperator.getAllDeliveryGuys().isEmpty()) {
+            for (DeliveryGuy guy : PickUpOperator.getAllDeliveryGuys()) {
                 if (!guy.getAllDeliverySession().isEmpty()) {
                     DeliverySession session = guy.getAllDeliverySession().get(0);
                     if (SimulatedTime.compareStringTime(clock.getTime(), session.getDeliveryStartTime()) < 0) {
-                        // move to restaurant branch to "fetch prepared order"
-                        if (guy.getCurrentPosition().getPosX() - session.getPackageOrderTBD().getBranchLocation().getPosX() != 0) {
-                            if (guy.getCurrentPosition().getPosX() - session.getPackageOrderTBD().getBranchLocation().getPosX() < 0) {
+                        // move to packages branch to "fetch prepared order"
+                        if (guy.getCurrentPosition().getPosX() - session.getPickUpOrderTBD().getBranchLocation().getPosX() != 0) {
+                            if (guy.getCurrentPosition().getPosX() - session.getPickUpOrderTBD().getBranchLocation().getPosX() < 0) {
                                 guy.getCurrentPosition().setPosX(guy.getCurrentPosition().getPosX() + 1);
-                            } else if (guy.getCurrentPosition().getPosX() - session.getPackageOrderTBD().getBranchLocation().getPosX() > 0) {
+                            } else if (guy.getCurrentPosition().getPosX() - session.getPickUpOrderTBD().getBranchLocation().getPosX() > 0) {
                                 guy.getCurrentPosition().setPosX(guy.getCurrentPosition().getPosX() - 1);
                             }
-                        } else if (guy.getCurrentPosition().getPosY() - session.getPackageOrderTBD().getBranchLocation().getPosY() != 0) {
-                            if (guy.getCurrentPosition().getPosY() - session.getPackageOrderTBD().getBranchLocation().getPosY() < 0) {
+                        } else if (guy.getCurrentPosition().getPosY() - session.getPickUpOrderTBD().getBranchLocation().getPosY() != 0) {
+                            if (guy.getCurrentPosition().getPosY() - session.getPickUpOrderTBD().getBranchLocation().getPosY() < 0) {
                                 guy.getCurrentPosition().setPosY(guy.getCurrentPosition().getPosY() + 1);
-                            } else if (guy.getCurrentPosition().getPosY() - session.getPackageOrderTBD().getBranchLocation().getPosY() > 0) {
+                            } else if (guy.getCurrentPosition().getPosY() - session.getPickUpOrderTBD().getBranchLocation().getPosY() > 0) {
                                 guy.getCurrentPosition().setPosY(guy.getCurrentPosition().getPosY() - 1);
                             }
                         }
                     } else if (SimulatedTime.compareStringTime(clock.getTime(), session.getDeliveryStartTime()) >= 0
                             && SimulatedTime.compareStringTime(clock.getTime(), session.getDeliveryEndTime()) < 0) {
-                        // move from restaurant branch to delivery location
+                        // move from packages branch to delivery location
                         if (guy.getCurrentPosition().getPosX() - session.getDeliveryEndPosition().getPosX() != 0) {
                             if (guy.getCurrentPosition().getPosX() - session.getDeliveryEndPosition().getPosX() < 0) {
                                 guy.getCurrentPosition().setPosX(guy.getCurrentPosition().getPosX() + 1);
@@ -145,17 +145,17 @@ class DeliveryGuy {
 
     static class DeliverySession {
 
-        private PackageOrder PackageOrderTBD;
+        private PickUpOrder PickUpOrderTBD;
         private Position deliveryStartPosition;
         private Position deliveryEndPosition;
         private String deliveryStartTime;
         private String deliveryEndTime;
         private int deliveryDuration;
 
-        public DeliverySession(PackageOrder PackageOrderTBD, String deliveryStartTime, String deliveryEndTime) {
-            this.PackageOrderTBD = PackageOrderTBD;
-            this.deliveryStartPosition = PackageOrderTBD.getBranchLocation();
-            this.deliveryEndPosition = PackageOrderTBD.getDeliveryLocation();
+        public DeliverySession(PickUpOrder PickUpOrderTBD, String deliveryStartTime, String deliveryEndTime) {
+            this.PickUpOrderTBD = PickUpOrderTBD;
+            this.deliveryStartPosition = PickUpOrderTBD.getBranchLocation();
+            this.deliveryEndPosition = PickUpOrderTBD.getDeliveryLocation();
             this.deliveryStartTime = deliveryStartTime;
             this.deliveryEndTime = deliveryEndTime;
             this.deliveryDuration = SimulatedTime.differenceTime(deliveryStartTime, deliveryEndTime);
@@ -169,12 +169,12 @@ class DeliveryGuy {
             this.deliveryDuration = deliveryDuration;
         }
 
-        public PackageOrder getPackageOrderTBD() {
-            return PackageOrderTBD;
+        public PickUpOrder getPickUpOrderTBD() {
+            return PickUpOrderTBD;
         }
 
-        public void setPackageOrderTBD(PackageOrder PackageOrderTBD) {
-            this.PackageOrderTBD = PackageOrderTBD;
+        public void setPickUpOrderTBD(PickUpOrder PickUpOrderTBD) {
+            this.PickUpOrderTBD = PickUpOrderTBD;
         }
 
         public Position getDeliveryStartPosition() {

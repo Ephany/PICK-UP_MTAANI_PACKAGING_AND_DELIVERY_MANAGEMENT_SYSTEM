@@ -38,13 +38,13 @@ class Package {
 
     /**
      *
-     * @param restaurantName
-     * @return all branch positions of given restaurant
+     * @param packageName
+     * @return all branch positions of given packages
      */
     public static String toTxtPositions(String packageName) {
         String result = "";
-        if (!PackageOperator.getPartnerPackage().isEmpty()) {
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (packages.getName().equals(packageName)) {
                     String pos = packages.getPosition().toString();
                     pos = pos.substring(1, pos.length() - 1).replaceFirst(",", "");
@@ -64,8 +64,8 @@ class Package {
 
     public static String toTxtDishes(String packageName) {
         String result = "";
-        if (!PackageOperator.getPartnerPackage().isEmpty()) {
-            for (Package packages : PackageOperator.getPartnerPackage()) {
+        if (!PickUpOperator.getPartnerPackages().isEmpty()) {
+            for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (packages.getName().equals(packageName)) {
                     if (!packages.getAllAvailableDishes().isEmpty()) {
                         for (Dish dish : packages.getAllAvailableDishes()) {
@@ -89,7 +89,7 @@ class Package {
     public String getNextOrderStartPrepTime() {
         if (!allPackageOrders.isEmpty()) {
             if (SimulatedTime.compareStringTime(clock.getTime(), allPackageOrders.get(allPackageOrders.size() - 1).getEndTime()) <= 0) {
-//                return SimulatedTime.addStringTime(allRestaurantOrders.get(allRestaurantOrders.size() - 1).getEndTime(), "00:01");
+//                return SimulatedTime.addStringTime(allPackageOrders.get(allPackageOrders.size() - 1).getEndTime(), "00:01");
                 return allPackageOrders.get(allPackageOrders.size() - 1).getEndTime();
             } else {
                 return clock.getTime();
@@ -108,7 +108,7 @@ class Package {
         return -1;
     }
 
-    public ArrayList<PackageOrder> getAllRestaurantOrders() {
+    public ArrayList<PackageOrder> getAllPackageOrders() {
         return allPackageOrders;
     }
 

@@ -43,7 +43,7 @@ Package delivery service simulator. Something like [GrabFood](https://www.grab.c
 ## Usage
 1. Download this repository in a zip file by clicking [here](https://github.com/Ephany/PICK-UP_MTAANI_PACKAGING_AND_DELIVERY_MANAGEMENT_SYSTEM/archive/main.zip) or execute this from the terminal:
 ```
-git clone https://github.com/Gtindi/Restaurant_Ordering_Application.git
+git clone https://github.com/Ephany/PICK-UP_MTAANI_PACKAGING_AND_DELIVERY_MANAGEMENT_SYSTEM.git
 ```
 2. Open your IDE.
 3. Open the project with your IDE.

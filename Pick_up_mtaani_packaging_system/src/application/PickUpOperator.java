@@ -252,7 +252,7 @@ class PickUpOperator {
      */
     public static void readLog() {
         try {
-            Scanner s = new Scanner(new FileInputStream("application-io/log.txt"));
+            Scanner s = new Scanner(new FileInputStream("pickup-io/log.txt"));
             while (s.hasNextLine()) {
                 log.set(log.concat(s.nextLine() + "\n").get());
             }
@@ -273,7 +273,7 @@ class PickUpOperator {
         // append externally to "log.txt"
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileOutputStream("application-io/log.txt", true));
+            pw = new PrintWriter(new FileOutputStream("pickup-io/log.txt", true));
             pw.print(lineToAppend);
         } catch (FileNotFoundException ex) {
             System.out.println("\"log.txt\" not found.");
@@ -288,7 +288,7 @@ class PickUpOperator {
     public static void updatePartnerPackages() {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileOutputStream("application-io/partner-packages.txt"));
+            pw = new PrintWriter(new FileOutputStream("pickup-io/partner-package.txt"));
             ArrayList<String> printedRes = new ArrayList<>();
             for (Package packages : PickUpOperator.getPartnerPackages()) {
                 if (!printedRes.contains(packages.getName())) {
@@ -299,7 +299,7 @@ class PickUpOperator {
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("\"partner-packages.txt\" not found.");
+            System.out.println("\"partner-package.txt\" not found.");
         } finally {
             if (pw != null) {
                 pw.close();
@@ -316,7 +316,7 @@ class PickUpOperator {
         }
 
         try {
-            Scanner s = new Scanner(new FileInputStream("application-io/partner-packages.txt"));
+            Scanner s = new Scanner(new FileInputStream("pickup-io/partner-package.txt"));
 
             while (s.hasNextLine()) {
                 Package packages = new Package();
@@ -357,7 +357,7 @@ class PickUpOperator {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("\"partner-packages.txt\" not found.");
+            System.out.println("\"partner-package.txt\" not found.");
         }
     }
 
@@ -370,7 +370,7 @@ class PickUpOperator {
         }
 
         try {
-            Scanner s = new Scanner(new FileInputStream("application-io/delivery-guy.txt"));
+            Scanner s = new Scanner(new FileInputStream("pickup-io/delivery-guy.txt"));
 
             int numDeliveryGuy = 0;
             while (s.hasNextInt()) {
@@ -394,7 +394,7 @@ class PickUpOperator {
     public static void updateAllDeliveryGuys() {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(new FileOutputStream("application-io/delivery-guy.txt"));
+            pw = new PrintWriter(new FileOutputStream("pickup-io/delivery-guy.txt"));
             pw.print(allDeliveryGuys.size());
             clock.resetTime();
         } catch (FileNotFoundException ex) {
@@ -415,7 +415,7 @@ class PickUpOperator {
         }
 
         try {
-            Scanner s = new Scanner(new FileInputStream("application-io/preset-application-order.txt"));
+            Scanner s = new Scanner(new FileInputStream("pickup-io/preset-pickup-order.txt"));
 
             while (s.hasNextLine()) {
                 PickUpOrder pickUpOrder = new PickUpOrder();
@@ -460,7 +460,7 @@ class PickUpOperator {
                 allPresetPickUpOrders.add(pickUpOrder);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("\"application-order.txt\" not found.");
+            System.out.println("\"pickup-order.txt\" not found.");
         }
     }
 

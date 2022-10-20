@@ -30,7 +30,7 @@ public class MyGoogleMap {
      */
     public void readMap() {
         try {
-            Scanner s = new Scanner(new FileInputStream("crabfood-io/map.txt"));
+            Scanner s = new Scanner(new FileInputStream("pickup-io/map.txt"));
 
             while (s.hasNextLine()) {
                 String nextLine = s.nextLine();
